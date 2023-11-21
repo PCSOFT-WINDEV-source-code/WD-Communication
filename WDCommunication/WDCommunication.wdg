@@ -1,0 +1,1322 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : WDCommunication
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1018def902bdb0ab
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAAAO3vcg8YjWc8d+KSy8aXYdC7YytXYOdBOyI4Q3O+rhgIE8xRdZqRNv8gaqy4RoVYreJpkCRyKYRdNlkk4yC+u0Bo4IfWgihQ==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAABRIzR/68Q5FhFqB0jk7x5fuUv+DPZ3t5OxGJN+yAWJAbtuYEA92h2hson/dlRqM5wJvEi0pmoNMcl4YxTp94Ofdv4PcmJPz0GTDT2L97GlLRwmn6bbAkGwI0NQq6hAgGt6pnoAv0mclFp8rfY=
+     code : |1+
+      PRIVATE
+      
+      //Structure for the array of Windows messages
+      WindowsMessage is Structure
+      	sStringComIdentifier		is string 
+      	nIDMemoryZone				is int
+      	sNameProcedureToTrigger	is string
+      	sNameCurrentApplication		is string	
+      END
+      
+      //Structure for the array of sockets
+      SocketMessage is Structure
+      	
+      	sSocketName					is string 
+      	nSocketNum					is int
+      	sNameProcedureToTrigger	is string
+      	sIPAddress					is string
+      	nPort						is int
+      	sKeyForDataEncryption		is string
+      	nTypeDataEncryption		is 8-byte int
+      	sChannelName					is string
+      END
+      
+      //Structure for the "local" communication
+      InfoMessageSent is Structure
+      	nIDDestinationApp			is int
+      	nIDSenderApp			is int
+      	nIDCommunicationType		is int
+      	nSizeRecipientName is int
+      	nMessageSize is int
+      END
+      
+      gnIDMessageCurrentlySent			is int 
+      
+      //Array with the declared messages (if several "local" communications are in progress)
+      gaaChannels						is ASSOCIATIVE ARRAY of WindowsMessage
+      gsMessageAnswer				is string
+      gbPending 					is boolean
+      
+      
+      //Array with the current sockets (if several "remote" communications are in progress)
+      gArrHSocket						is array dynamic <critical section> of 0 SocketMessage 
+      
+      
+      gnTypeRequestString				is  int=1
+      gnTypeResponseString				is  int=2
+      gsNameWindowsCore				is string
+      gnEventNum					is int
+      
+      PUBLIC
+      
+      CONSTANT
+      	
+      	EVENTTYPE_CONNECTION 		= 	1
+      	EVENTTYPE_DISCONNECTION		=	2
+      	EVENTTYPE_MESSAGE			=	3
+      	
+      	SIZE_MEMORYZONE				= 1000
+      	
+      	
+      END
+      
+      
+      gnIDCurrentApplication			is int
+      gbTraceMode						is boolean=False
+      gbManageMultiThreadMessage		is boolean=False
+      gsErrorMessage					is string
+      gsLastReturnInfo				is string
+      
+      gsNameInfoProcedure				is string
+      
+      IF InPocketMode() AND NOT InTestMode() THEN
+      	gsNameWindowsCore="COREDLL.DLL"
+      	gnIDCurrentApplication=TimeToInteger(TimeSys())
+      ELSE
+      	gsNameWindowsCore="KERNEL32"
+      	gnIDCurrentApplication=API(gsNameWindowsCore,"GetCurrentProcessId")
+      END
+      
+      //event for centralized management of requests by the main thread
+      StartCommunicationEvent()
+     type : 720896
+  procedures :
+   -
+     name : LocalDeclareMessage
+     procedure_id : 1159922249806796823
+     type_code : 15
+     code : |1+
+      //Declare a message on the system in order to use it between two applications that operate on the same computer
+      
+      // Syntax:
+      //[ <Result> = ] LocalDeclareMessage (<sStringComIdentifier> [, <sNameProcedureToTrigger> [, <sApplicationName>]])
+      //
+      // Parameters:
+      //	sStringComIdentifier: character string (up to 20) that identifies the communication channel
+      //	sNameProcedureToTrigger (default value=""): character string containing the name of the procedure to trigger when the application receives a message from another application
+      //	sApplicationName: character string that identifies the current application (name of the current project by default)
+      // Return value:
+      // 	boolean: // 	None
+      //	In this case, the details of the error can be retrieved via ErrorInfo()
+      //	sNameEventWindow: Name of the window to associate (current window by default, "*" for all the windows)
+      PROCEDURE LocalDeclareMessage(sStringComIdentifier,sNameProcedureToTrigger="",sApplicationName=ProjectInfo(piProjectName))
+      
+      AWindowsMsg 		is WindowsMessage
+      
+      // Open the memory zone
+      AWindowsMsg.nIDMemoryZone = fMemOpen(sStringComIdentifier,SIZE_MEMORYZONE,shareUser,foReadWrite, LocalMessage)
+      IF AWindowsMsg.nIDMemoryZone = -1 THEN
+      	RESULT False
+      END
+      AWindowsMsg.sStringComIdentifier = sStringComIdentifier
+      AWindowsMsg.sNameCurrentApplication = sApplicationName
+      AWindowsMsg.sNameProcedureToTrigger = sNameProcedureToTrigger
+      
+      gaaChannels[sStringComIdentifier] = AWindowsMsg
+      
+      RESULT True
+     type : 458752
+   -
+     name : LocalCancelMessage
+     procedure_id : 1159928009358036668
+     type_code : 15
+     code : |1+
+      //Cancels a message declared to the system (end of communication between 2 applications on the same computer)
+      // Syntax:
+      //LocalCancelMessage (<sStringCommIdentifier>)
+      //
+      // Parameters:
+      //	sStringCommIdentifier: character string (up to 20) that identifies the communication channel to end
+      // Return value:
+      // 	None
+      
+      
+      PROCEDURE LocalCancelMessage(sStringCommIdentifier)
+      
+      fClose(gaaChannels[sStringCommIdentifier]:nIDMemoryZone)
+      Delete(gaaChannels,sStringCommIdentifier)
+     type : 458752
+   -
+     name : LocalMessage
+     procedure_id : 1159934099621703609
+     type_code : 15
+     code : |1-
+      //Procedure internal to the set of procedures
+      // Syntax:
+      //[ <Result> = ] LocalMessage (<sNameMemoryZone>)
+      //
+      // Parameters:
+      //	sNameMemoryZone: <specify the role of sNameMemoryZone>
+      // Return value:
+      // 	boolean:   
+      
+      PROCEDURE PRIVATE LocalMessage(LOCAL sNameMemoryZone) 
+      
+      sInfoReturn 		is string
+      strMessage			is InfoMessageSent
+      sFlatInfo			is string
+      sMessageString is string
+      sStringRecipientName is string
+      
+      
+      sNameMemoryZone = Replace(sNameMemoryZone, "Local\","",IgnoreCase)
+      sNameMemoryZone = Replace(sNameMemoryZone, "Global\","",IgnoreCase)
+      
+      //Search for the string that identifies the communication according to the message number
+      IF gaaChannels[sNameMemoryZone]..Empty = True THEN
+      	// Memory zone deleted
+      	RESULT True
+      END
+      
+      fSeek(gaaChannels[sNameMemoryZone].nIDMemoryZone,0,fpBeginning)
+      
+      // Read the message structure
+      
+      fRead(gaaChannels[sNameMemoryZone].nIDMemoryZone,Dimension(strMessage), &strMessage) //-8 for twice the 4 bytes of the addresses of strings
+      
+      fSeek(gaaChannels[sNameMemoryZone].nIDMemoryZone,1,fpCurrent)
+      
+      //retrieve the strings
+      //update the strings of the structure
+      
+      sMessageString = fRead(gaaChannels[sNameMemoryZone].nIDMemoryZone,strMessage:nMessageSize)
+      fread(gaaChannels[sNameMemoryZone].nIDMemoryZone,1)
+      
+      IF strMessage:nSizeRecipientName <> 0 THEN
+      	sStringRecipientName = fRead(gaaChannels[sNameMemoryZone].nIDMemoryZone,strMessage:nSizeRecipientName)
+      	fRead(gaaChannels[sNameMemoryZone].nIDMemoryZone,1)
+      END
+      
+      // Did I send it?
+      IF (strMessage:nIDSenderApp<>gnIDCurrentApplication) _AND_ ... 	
+      	//is the message for everybody or just for me?
+      	(strMessage:nIDDestinationApp=gnIDCurrentApplication _OR_ ...
+      	(strMessage:nIDDestinationApp=-1 _AND_ ...
+      	(sStringRecipientName="" _OR_ sStringRecipientName = gaaChannels[sNameMemoryZone]:sNameCurrentApplication))) THEN
+      	//if procedure to run, run it
+      	
+      	// We we are waiting for a message, consider that it's this one
+      	IF gbPending THEN
+      		gbPending = False
+      		gsMessageAnswer = extractstring(sMessageString,2,tab)
+      		RESULT True
+      	END
+      	
+      	IF gaaChannels[sNameMemoryZone]:sNameProcedureToTrigger<>"" THEN
+      		WHEN EXCEPTION IN 
+      			sInfoReturn=ExecuteProcess(gaaChannels[sNameMemoryZone]:sNameProcedureToTrigger,trtProjectProcedure,sMessageString,gaaChannels[sNameMemoryZone]:sStringComIdentifier)
+      		DO
+      			sInfoReturn = ErrorInfo()+CR+"Reminder: The function called must have 2 input parameters and it must return a value at the end of process."
+      			gnIDMessageCurrentlySent=sInfoReturn
+      		END
+      		IF sInfoReturn<>"" THEN
+      			
+      			eSizeSent		is int
+      			bResult 			is int
+      			
+      			strMessage:nIDSenderApp=gnIDCurrentApplication
+      			strMessage:nIDDestinationApp=strMessage:nIDSenderApp
+      			strMessage:nIDCommunicationType=gnTypeResponseString //add the fact that it is a request 
+      			strMessage:nMessageSize = Length(sInfoReturn)
+      			strMessage:nSizeRecipientName = 0
+      			
+      			eSizeSent=Dimension(strMessage) + strMessage:nMessageSize+strMessage:nSizeRecipientName 
+      			eSizeSent++//+1 to add a binary 0 for separation between the two strings
+      			
+      			sFlatInfo=RepeatString("*",eSizeSent+1)
+      			
+      			//flatten
+      			Transfer(&sFlatInfo,&strMessage,Dimension(strMessage)-8) //-8 for the 2 times 4 bytes for the address of the strings
+      			sFlatInfo += sInfoReturn + Charact(0)
+      			sFlatInfo += Charact(0)
+      			
+      			IF gaaChannels[sNameMemoryZone]..Empty = True THEN
+      				gsErrorMessage="Identifier of communication not found"
+      				ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      				RESULT False
+      			END
+      			
+      			// position at the beginning
+      			fSeek(gaaChannels[sNameMemoryZone].nIDMemoryZone,0,fpBeginning)
+      			
+      			// Writes into the memory zone
+      			bResult = fWrite(gaaChannels[sNameMemoryZone].nIDMemoryZone,sFlatInfo,Length(sFlatInfo))
+      			
+      		END
+      		
+      		RESULT True
+      	END
+      END
+      
+      RESULT True
+     type : 458752
+   -
+     name : LocalSendMessage
+     procedure_id : 1159962579549921098
+     type_code : 15
+     code : |1-
+      //Procedure used to send a message to another application on the same computer
+      //
+      // Syntax:
+      //[ <Result> = ] LocalSendMessage (<sStringCommIdentifier> [, <sStringToSend> is string [, <bWaitForResponse> [, <sNameDestApplication>]]])
+      //
+      // Parameters:
+      //	sStringCommIdentifier: character string (up to 20) that identifies the communication channel
+      //	sStringToSend (ANSI string - default value=""): character string that must be sent to the other application
+      //	bWaitForResponse (default value=1): boolean set to True in order for the function to wait for information and set to False otherwise.
+      //	sNameDestApplication (default value=""): Name of the destination application of the message (if several possible servers). Empty string if you don't want to specify (by default)
+      // Return value:
+      // 	Undefined type:  String returned by the other application
+      //Example:
+      ////in this case, wait for information
+      //trace("Return 1: "+LocalSendMessage(sMessageName,"SEARCH;POPNUM=123456"))
+      //
+      ////in this case, don't wait for information
+      //LocalSendMessage(sMessageName,"DISPLAYALL;COMPANY=987654",False)
+      //Caution: don't make several requests without waiting for return other wise some instructions may be lost
+      
+      
+      
+      //		Caution: don't make several requests without waiting for return other wise some instructions may be lost
+      PROCEDURE LocalSendMessage(sStringCommIdentifier,sStringToSend is string="",bWaitForResponse=True,LOCAL sNameDestApplication="")
+      
+      strMessage			is InfoMessageSent
+      eSizeSent		is int
+      sFlatInfo			is string
+      bResult 			is int
+      
+      strMessage:nIDSenderApp=gnIDCurrentApplication
+      strMessage:nIDDestinationApp=-1
+      strMessage:nIDCommunicationType=gnTypeRequestString //add the fact that it is a request 
+      strMessage:nMessageSize = Length(sStringToSend)
+      sNameDestApplication = StringFormat(sNameDestApplication,ccUpCase+ccIgnorePunctuationAndSpace+ccIgnoreAccent)
+      strMessage:nSizeRecipientName = Length(sNameDestApplication)
+      
+      eSizeSent=Dimension(strMessage) 
+      
+      sFlatInfo=RepeatString(Charact(0),eSizeSent+1)
+      
+      //flatten
+      Transfer(&sFlatInfo,&strMessage,Dimension(strMessage))
+      sFlatInfo += sStringToSend + Charact(0)
+      sFlatInfo += sNameDestApplication
+      
+      IF gaaChannels[sStringCommIdentifier]..Empty = True THEN
+      	gsErrorMessage="Identifier of communication not found"
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      END
+      
+      // position at the beginning
+      fSeek(gaaChannels[sStringCommIdentifier].nIDMemoryZone,0,fpBeginning)
+      
+      // Writes into the memory zone
+      bResult = fWrite(gaaChannels[sStringCommIdentifier].nIDMemoryZone,sFlatInfo,Length(sFlatInfo))
+      
+      //send 
+      IF bWaitForResponse THEN
+      	
+      	nMaxTime is int = 10
+      	gbPending = true
+      	while gbPending = true
+      		wait(1s,tempoTimer)	
+      		
+      		nMaxTime --
+      		if nMaxTime = 0 THEN
+      			break		
+      		END
+      	END
+      	result gsMessageAnswer
+      END
+      RESULT bResult
+     type : 458752
+   -
+     name : ServerStart
+     internal_properties : CAAAAAgAAABdOKCnsMTo/myfwi9HAa8L/9/rCWHBgM79msb4AP4tRg9dQPu1lsuJQ5DpmavrT/xMe8v5HAHwIzFBoXn4Ui+pZZcxsKh/1Az53ovGkRqHFCbdRzrzvTH1MzU5C+FQ3kSzT+haPqbaTUnhbxQWzdLoGIkeVM4YBuIPuawFpg+uhqhPfo5vJGaaTTEbn+Gx/4NLYF49VIgh4Pwc2vG1Q4uShuiNcvcp8FjCe1rNOpPaxRamZwaAMZVjjZJnDKrQKg==
+     procedure_id : 1181100544554964411
+     type_code : 15
+     code : |1-
+      //This procedure is used to start a function server. Which means that the application can receive messages 
+      //from the applications found on another computers
+      
+      // Syntax:
+      //[ <Result> = ] ServerStart (<sServerName>, <sNameProcedureToTrigger> [, <nPortNum> is int [, <sAddress> is string [, <sEncryptionKey> is string [, <nEncryptionType> [, <bManageMultiThreadOfClients>]]]]])
+      //
+      // Parameters:
+      // 	sServerName: <specify the role of sServerName>
+      //	sNameProcedureToTrigger: Name of an application procedure that must be triggered when a message is received....
+      //	nPortNum (integer - default value=5023): Number of the communication port (5023 by default)
+      //	sAddress (string): IP address (or DNS name) on which the communication will be done. By default, address of all IP addresses of the current computer
+      //	sEncryptionKey (string - default value="WDCommunication"): encryption key used to encode the data: "WDCommunication" by default
+      //	nEncryptionType (default value=1): Type of encryption to use: cryptSecure (RC5 algorithm on 128 bits), cryptFast (by default, fast encryption with an algorithm on 128 bits), cryptNone (no encryption).
+      //	bManageMultiThreadOfClients (default value=1): Boolean set to True (by default) in order for each connection to be managed by a different thread and set to True in order for the processes to the performed in the main thread
+      // Return value:
+      // 	boolean:                    True if the service was started, False if an error occurred. In this case, see 'LastError'
+      //
+      
+      
+      PROCEDURE ServerStart(sServerName,sNameProcedureToTrigger,nPortNum is int=5023,sAddress is string="",sEncryptionKey is string="WDCommunication",nEncryptionType=cryptFast,bManageMultiThreadOfClients=True)
+      
+      ASocketMsg	is SocketMessage
+      
+      ASocketMsg:sSocketName = sServerName
+      
+      gsErrorMessage=""
+      
+      //multithread management for independent contexts by connections
+      WDCommunication.gbManageMultiThreadMessage=bManageMultiThreadOfClients
+      ThreadMode(threadCriticalSection+threadMonoProcessor)
+      
+      
+      IF CheckWhetherConnectionExists(ASocketMsg:sSocketName) THEN
+      	gsErrorMessage="The server is already enabled."
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      ELSE
+      	//no standard connection in this case
+      	gsErrorMessage=""
+      END
+      
+      xTrace("Starting the listening socket.")
+      IF NOT SocketCreate(ASocketMsg:sSocketName,nPortNum,sAddress) THEN
+      	gsErrorMessage="Unable to start the sever. "+ErrorInfo()
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      END
+      
+      xTrace("Storing the information of the listening socket")
+      ASocketMsg:nSocketNum=GetIdentifier()
+      ASocketMsg:sNameProcedureToTrigger=sNameProcedureToTrigger
+      ASocketMsg:sIPAddress=sAddress
+      ASocketMsg:nPort=nPortNum
+      //store the encryption key and the type of encryption
+      ASocketMsg:sKeyForDataEncryption=sEncryptionKey
+      ASocketMsg:nTypeDataEncryption=nEncryptionType
+      ASocketMsg:nSocketNum=ASocketMsg:sSocketName
+      
+      CriticalSectionStart(gArrHSocket)
+      
+      ArrayAdd(gArrHSocket,ASocketMsg)
+      //sort for the future search
+      ArraySort(gArrHSocket,asMember,"sSocketName")
+      
+      CriticalSectionEND(gArrHSocket)
+      
+      
+      xTrace("Starting the thread for waiting for connections")
+      //thread for waiting for the connections
+      ThreadExecute(ASocketMsg:sSocketName,threadNormal,"ServerWaitForConnection",ASocketMsg:sSocketName,ASocketMsg:sKeyForDataEncryption,ASocketMsg:nTypeDataEncryption)
+      
+      xTrace("Communication successfully established")
+      //Ok
+      RESULT True
+     type : 458752
+   -
+     name : ServerWaitForConnection
+     internal_properties : CAAAAAgAAAD1gDhC8MdgvsQnMl83rV8Z6w+frVHlpBadGuKNmGjM+kMNjFfZeq8ttzS9D5fp5gxbH3+xYDEYR2VVsXmsqj+NmQMVmDSPPCglmoOefVLvGPKBq2J/ddEht6kJM1UgFhIRIfqYsJTQZ5ebSfLEA2hG5tPYSrjO1DRdw0bbHK0MZLZBqETJClSsk5Otjb/Hio7fhhQ5WIxNrMhY1v1J+0Pake2idMUDuqYcyRiPmDE8RbbCQ/pUndFHOX0CtBJ4gg==
+     procedure_id : 1181105208889551484
+     type_code : 15
+     code : |1-
+      //Procedure internal to the set of procedures
+      
+      //Procedure for waiting for the connections on a socket (for the server side)
+      
+      // Syntax:
+      //ServerWaitForConnection (<sNameMainSocket>, <sKeyforDataEncryption>, <nTypeDataEncryption>)
+      //
+      // Parameters:
+      //	sNameMainSocket: Name of the socket on which the connections must be "expected"
+      //	sKeyForDataEncryption: encryption key used to encode the data.
+      //	nTypeDataEncryption: Type of encryption to use: cryptSecure (RC5 algorithm on 128 bits), cryptFast (fast encryption with an algorithm on 128 bits), cryptNone (no encryption).
+      // Return value:
+      // 	None
+      
+      PROCEDURE PRIVATE ServerWaitForConnection(LOCAL sNameMainSocket,sKeyForDataEncryption,nTypeDataEncryption)
+      sNameCommunicationChannel		is string
+      sNameCurrentThread			is string=sNameMainSocket
+      nArraySubscript is int
+      
+      xTrace("Thread of communication between thread for waiting for connections")
+      LOOP
+      	//wait for the connections
+      	IF SocketWaitForConnection(sNameMainSocket,1) THEN
+      		//new connection
+      		
+      		sNameCommunicationChannel =  SocketAccept(sNameMainSocket)
+      		
+      		
+      		xTrace("New connection, channel:"+sNameCommunicationChannel)
+      		//channel established?
+      		//ok
+      		SendEventInfo(sNameCurrentThread,sNameMainSocket,sNameCommunicationChannel,"Connection on channel "+sNameCommunicationChannel,EVENTTYPE_CONNECTION)
+      		xTrace("Starting the thread for the communication with this new connection")
+      		
+      		CriticalSectionStart(gArrHSocket)
+      		
+      		nArraySubscript = ArraySeek(gArrHSocket,asBinary,"sSocketName",sNameMainSocket)
+      		
+      		gArrHSocket[nArraySubscript]:sChannelName = sNameCommunicationChannel
+      		
+      		CriticalSectionEND(gArrHSocket)
+      		
+      		
+      		//thread for the communication
+      		ThreadExecute(sNameCommunicationChannel,threadNormal,ServerProcessRequest,sNameCommunicationChannel,sNameMainSocket,sKeyForDataEncryption,nTypeDataEncryption)
+      		BREAK	
+      		
+      	END
+      	
+      	//stop if the socket was closed
+      	IF NOT SocketExist(sNameMainSocket) THEN BREAK
+      END
+      xTrace("End of communication thread for waiting for connections")
+     type : 458752
+   -
+     name : ServerProcessRequest
+     internal_properties : CAAAAAgAAADKJvRTMTDyoB5hXDyEfCtTzTLLWyXIKW5C87Hbm29LWeBjMiDcMZIDiHhse2QhhyzjG0Rs7XH2MKPjpug3ne4Z23/jbiLYZXKGxrBiIn71algru7bNiX7TI9JQd47Rz6qEQ1rbjpnd56sIUyIZQIWUU3X0j0Jpb8CNABatOxTCWVs65djmXMTZ2O+z3Ca2YdgTStav
+     procedure_id : 1181106694948319678
+     type_code : 15
+     code : |1+
+      //Procedure internal to the set of procedures
+      //Procedure used to process a sending/a request (for the server side)
+      
+      // Syntax:
+      //ServerProcessRequest (<sNameCommunicationChannel>, <sNameMainSocket>, <sKeyForDataEncryption>, <nTypeDataEncryption>)
+      //
+      // Parameters:
+      //	sNameCommunicationChannel: Name of the communication channel on which the request is made (also name of the current thread)
+      //	sNameMainSocket: Name of the main socket on which the request is made
+      //	sKeyforDataEncryption: <specify the role of sKeyForDataEncryptioin>
+      //	nTypeDataEncryption: <specify the role of nTypeDataEncryption>
+      // Return value:
+      // 	None
+      
+      PROCEDURE PRIVATE ServerProcessRequest(LOCAL sNameCommunicationChannel,LOCAL sNameMainSocket,sKeyForDataEncryption,nTypeDataEncryption)
+      sMessageSent		is string
+      sNameCurrentThread	is string=sNameCommunicationChannel
+      ArraySubscript		is int
+      
+      
+      xTrace("Beginning of the wait loop of requests for the channel "+sNameCommunicationChannel)
+      
+      LOOP
+      	xTrace("Server waiting for requests")
+      	//Read in infinite wait
+      	sMessageSent=ReadInSocket(sNameCommunicationChannel,sKeyForDataEncryption,nTypeDataEncryption)
+      	
+      	xTrace("Receiving a request on the channel "+sNameCommunicationChannel+": "+sMessageSent)
+      	//Something was received?
+      	IF sMessageSent<>"" THEN
+      		//a procedure to trigger?
+      		//if sNameProcedureToTrigger<>"" then
+      		xTrace("Execution of the procedure ")
+      		
+      		SendEventInfo(sNameCurrentThread,sNameMainSocket,sNameCommunicationChannel,sMessageSent,EVENTTYPE_MESSAGE)
+      		
+      	END
+      	
+      	//end if no socket
+      	IF NOT SocketExist(sNameCommunicationChannel)	THEN 
+      		xTrace("the socket linked to the channel "+sNameCommunicationChannel+" does no longer exist on the server, end of communication on this channel")
+      		BREAK
+      	END
+      END
+      
+      //make sure that the socket is closed
+      IF SocketExist(sNameCommunicationChannel) THEN SocketClose(sNameCommunicationChannel)
+      xTrace("End of communication on the channel "+sNameCommunicationChannel)
+      
+      CriticalSectionStart(gArrHSocket)
+      
+      //delete the array
+      ArraySubscript=ArraySeek(gArrHSocket,asLinear,"sSocketName",sNameCommunicationChannel)
+      IF ArraySubscript>0 THEN
+      	ArrayDelete(gArrHSocket,ArraySubscript)
+      END
+      
+      CriticalSectionEnd(gArrHSocket)
+     type : 458752
+   -
+     name : ClientConnectionServer
+     internal_properties : CAAAAAgAAABcLaXN8sbDsuexoZi6GnXCVTe+8hXJvg3pOKUbU52e/BbR8A4VDTh0rq/+7rkJyRQBkemTmbzmBi+41GbILuXLb1zj5BZrKpdHFb0TlLecjj6vMPGATkdaqnFReM/INB3vfsW+zdosdCTlXtfWyxwd0oSfFA80JrESbb2cNEtylN1t8ouj7ROa6Q69b0SQT9htyR3tn0LZv+OkHcYtTWMDxLTRpg==
+     procedure_id : 1181116195416027163
+     type_code : 15
+     code : |1+
+      //Connects a client computer to a process server
+      // Syntax:
+      //[ <Result> = ] ClientConnectionServer (<sNameCommunicationChannel>, <sAddress> is string [, <ePortNum> is int [, <sCallBack> [, <sEncryptionKey> is string [, <eEncryptionType> [, <eDurationConnectionWait>]]]]])
+      //
+      // Parameters:
+      //	sNameCommunicationChannel: Name of the channel that identifies the communication. Empty string for an automatic assignment of a channel name
+      //	sAddress (string): IP address of the server
+      //	ePortNum (integer - default value=5023): number of the communication port for the server
+      // 	sCallBack (default value=""): <specify the role of sCallBack>
+      //	sEncryptionKey (string - default value="WDCommunication"): encryption key used to encode the data: "WDCommunication" by default
+      //	eEncryptionType (default value=1): Type of encryption to use: cryptSecure (RC5 algorithm on 128 bits), cryptFast (by default, fast encryption with an algorithm on 128 bits), cryptNone (no encryption).
+      //	eDurationConnectionWait (default value=5000): Maximum wait (in milliseconds) for establishing the connection.
+      // Return value:
+      // 	boolean:            True if the connection was successful, False otherwise
+      //
+      //Example:
+      //	sXMLDoc		is string="sXMLDoc"
+      //	sXMLInfo 	is string
+      //	
+      //	XMLDocument(sXMLDoc,"") //blank XML document
+      //	XMLAddChild(sXMLDoc,"MESSAGE","",True) //Type of action to perform: Search
+      //	// OR XMLInsertElement(sXMLDoc,"MESSAGE","",XMLNextElement,True) //Type of action to perform: Send a message
+      //	XMLAddChild(sXMLDoc,"SENDER",sSender)
+      //	XMLAddChild(sXMLDoc,"RECIPIENT",sRecipient)
+      //	XMLAddChild(sXMLDoc,"SUBJECT",sSubjectOrPopNum)
+      //	XMLAddChild(sXMLDoc,"DETAILS",sMessageBody)
+      //	sXMLInfo=XMLBuildString(sXMLDoc) //Retrieves the XML that was built
+      //	XMLClose(sXMLDoc) //Frees the XML document
+      //	
+      //	if ClientConnectionServer(sCommunicationChannel,sServerAddress,eNumServerPort,"EncryptionKey",cryptFast,500) then
+      //		IF NOT ClientSendMessageServer(sCommunicationChannel,sXMLInfo,False) then
+      //			Error("Failure sending the message",WDCommunication.sErrorMessage)
+      //		END
+      //		ClientDisconnection(sCommunicationChannel)
+      //	otherwise
+      //		Error("Connection failure",WDCommunication.sErrorMessage)
+      //	end
+      
+      
+      PROCEDURE ClientConnectionServer(sNameCommunicationChannel,sAddress is string,ePortNum is int=5023,sCallBack ="",sEncryptionKey is string="WDCommunication",eEncryptionType=cryptFast,eDurationConnectionWait=5000)
+      ASocketMsg	is SocketMessage
+      
+      
+      
+      IF sNameCommunicationChannel="" THEN sNameCommunicationChannel="ChannelAutoCom"+TimeSys()+GetIdentifier()
+      gsErrorMessage=""
+      xTrace("Creating the name of the socket")
+      //ASocketMsg:sSocketName=StringFormat(sNameCommunicationChannel,ccUpCase+ccIgnorePunctuationAndSpace+ccIgnoreAccent)
+      ASocketMsg:sSocketName=sNameCommunicationChannel
+      
+      IF CheckWhetherConnectionExists(ASocketMsg:sSocketName) THEN
+      	gsErrorMessage="A connection is already established on this channel."
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      END
+      
+      xTrace("Starting the connection")
+      
+      //create a closed signal to wait for the result
+      EventCreate("CtSocket"+ASocketMsg:sSocketName,eventManual,eventClose)
+      
+      //connection via thread to avoid time problem even if TimeOut is low
+      ThreadExecute("CtSocket"+ASocketMsg:sSocketName,threadNormal,"ConnectionViaThread",ASocketMsg:sSocketName,ePortNum,sAddress,eDurationConnectionWait) 
+      IF NOT EventWait("CtSocket"+ASocketMsg:sSocketName,eDurationConnectionWait/10) _OR_ NOT SocketExist(ASocketMsg:sSocketName) THEN
+      	EventDestroy("CtSocket"+ASocketMsg:sSocketName)
+      	//ThreadStop("CtSocket"+ASocketMsg:sSocketName,eDurationConnexionWait/2)
+      	//if not SocketConnect(ASocketMsg:sSocketName,ePortNum,sAddress,eDurationConnectionWait) then 	
+      	gsErrorMessage=StringBuild("Failure of the connection to the %1 address on port %2. The computer did not answer quick enough. %3 ",sAddress,ePortNum,ErrorInfo())
+      	xTrace("Failure of the socket")
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False		
+      END
+      EventDestroy("CtSocket"+ASocketMsg:sSocketName)
+      
+      
+      xTrace("Connection established")
+      
+      ASocketMsg:nSocketNum=GetIdentifier()
+      ASocketMsg:sChannelName=sNameCommunicationChannel
+      ASocketMsg:sNameProcedureToTrigger=sCallBack
+      ASocketMsg:sIPAddress=sAddress
+      ASocketMsg:nPort=ePortNum
+      //store the encryption key and the type of encryption
+      ASocketMsg:sKeyForDataEncryption=sEncryptionKey
+      ASocketMsg:nTypeDataEncryption=eEncryptionType
+      
+      CriticalSectionStart(gArrHSocket)
+      
+      ArrayAdd(gArrHSocket,ASocketMsg)
+      //sort for the future search
+      ArraySort(gArrHSocket,asMember,"sSocketName")
+      
+      CriticalSectionEnd(gArrHSocket)
+      
+      
+      //	sNameCommunicationChannel: Name of the communication channel on which the request is made (also name of the current thread)
+      //	sNameMainSocket: Name of the main socket on which the request is made
+      //	sKeyforDataEncryption: <specify the role of sKeyForDataEncryptioin>
+      //	nTypeDataEncryption: <specify the role of nTypeDataEncryption>
+      
+      // Each thread processes its messages
+      gbManageMultiThreadMessage = True
+      
+      ThreadExecute("CTSocket"+ TimeSys(),threadNormal,ServerProcessRequest,ASocketMsg:sChannelName,ASocketMsg:sSocketName,ASocketMsg:sKeyForDataEncryption,ASocketMsg:nTypeDataEncryption)
+      
+      
+      RESULT True
+      
+     type : 458752
+   -
+     name : ClientDisconnection
+     internal_properties : CAAAAAgAAADrRRBBVgSK0230kS+id7VU2BTv0IrbdJd/vwExgymgVJBtgK1CdoASRw10PNBKsI31vwRMu1rIihYeTbVWD9g6joO34XL4poBkZLtjlOfQqh0uC7miELQLfG6ktr+sbme6sDAiQZLhLT66K7mYFcwx1c4sxiH2w24IWJ5iphUyGGSH/81DYSzzJRmu4yBYDhV5FHTh0eT3wGKf7S2Llymqnlo=
+     procedure_id : 1181118265590287021
+     type_code : 15
+     code : |1-
+      //Stops a communication between the current computer (client) and a server, on the specified channel
+      // Syntax:
+      //[ <Result> = ] ClientDisconnection (<sNameCommunicationChannel> [, <eDurationWaitEndThread>])
+      //
+      // Parameters:
+      //	sNameCommunicationChannel: Name of the communication channel to stop
+      //	eDurationWaitEndThread (default value=500): Maximum wait duration for the end of thread in hundredths of a second
+      // Return value:
+      // 	boolean:   // 	None
+      //
+      
+      PROCEDURE ClientDisconnection(LOCAL sNameCommunicationChannel,eDurationWaitEndThread=500)
+      
+      eArraySubscript		is int
+      
+      xTrace("Disconnection from channel "+sNameCommunicationChannel)
+      
+      //stop the associated thread
+      IF ThreadState(sNameCommunicationChannel)<>threadUnknown THEN ThreadStop(sNameCommunicationChannel,eDurationWaitEndThread)
+      
+      CriticalSectionStart(gArrHSocket)
+      
+      //deletion in the array of current sockets
+      eArraySubscript=ArraySeek(gArrHSocket,asBinary,"sSocketName",sNameCommunicationChannel)
+      IF eArraySubscript>0 THEN
+      	
+      	IF gArrHSocket[eArraySubscript]:sChannelname <> "" THEN
+      		
+      		//close the socket
+      		IF SocketExist(gArrHSocket[eArraySubscript]:sChannelname) THEN
+      			SocketClose(gArrHSocket[eArraySubscript]:sChannelname)
+      		END
+      	END
+      	
+      	ArrayDelete(gArrHSocket,eArraySubscript)
+      END
+      CriticalSectionEND(gArrHSocket)
+      
+      
+      //close the socket
+      IF SocketExist(sNameCommunicationChannel) THEN
+      	SocketClose(sNameCommunicationChannel)
+      END
+      
+      RESULT True
+     type : 458752
+   -
+     name : ClientSendMessageServer
+     procedure_id : 1181123101723540241
+     type_code : 15
+     code : |1+
+      //Procedure used to send a character string from a client computer to a server
+      // Syntax:
+      //[ <Result> = ] ClientSendMessageServer (<sNameCommunicationChannel>, <sMessageToSend> [, <bWaitForReturn> is boolean [, <eTimeoutForReturn> is 8-byte int]])
+      //
+      // Parameters:
+      //	sNameCommunicationChannel: Name of the channel that identifies the communication
+      //	sMessageToSend: character string containing the information to send
+      //	bWaitForReturn (boolean - default value=1): boolean set to True (by default) to wait for the end of execution of the server process. In this case, "ClientGetLastValue" is used to retrieve the return value
+      //	eTimeoutForReturn (8-byte integer - default value=10000): maximum time-out (in ms, 10000 by default: 10s). -1 for an infinite wait.
+      // Return value:
+      // 	boolean: 
+      //Example:
+      // 	boolean:   True if successful, False otherwise (in this case, LastError returns the reason of the error)
+      //	sXMLDoc		is string="sXMLDoc"
+      //	sXMLInfo 	is string
+      //	
+      //	XMLDocument(sXMLDoc,"") //blank XML document
+      //	XMLAddChild(sXMLDoc,"MESSAGE","",True) //Type of action to perform: Search
+      //	// OR XMLInsertElement(sXMLDoc,"MESSAGE","",XMLNextElement,True) //Type of action to perform: Send a message
+      //	XMLAddChild(sXMLDoc,"SENDER",sSender)
+      //	XMLAddChild(sXMLDoc,"RECIPIENT",sRecipient)
+      //	XMLAddChild(sXMLDoc,"SUBJECT",sSubjectOrPopNum)
+      //	XMLAddChild(sXMLDoc,"DETAILS",sMessageBody)
+      //	sXMLInfo=XMLBuildString(sXMLDoc) //Retrieves the XML that was built
+      //	XMLClose(sXMLDoc) //Frees the XML document
+      //	
+      //	if ClientConnectionServer(sCommunicationChannel,sServerAddress,eNumServerPort,"EncryptionKey",cryptFast,500) then
+      //		IF NOT ClientSendMessageServer(sCommunicationChannel,sXMLInfo,False) then
+      //			Error("Failure sending the message",WDCommunication.sErrorMessage)
+      //		END
+      //		ClientDisconnection(sCommunicationChannel)
+      //	otherwise
+      //		Error("Connection failure",WDCommunication.sErrorMessage)
+      //	end
+      
+      PROCEDURE ClientSendMessageServer(LOCAL sNameCommunicationChannel,sMessageToSend,bWaitForReturn is boolean=True,eTimeoutForReturn is 8-byte int=1000)
+      ArraySubscript		is int
+      gsErrorMessage=""
+      
+      IF NOT CheckWhetherConnectionExists(sNameCommunicationChannel) THEN	
+      	RESULT False
+      END
+      
+      //search for the socket
+      IF NOT SocketExist(sNameCommunicationChannel) THEN
+      	ClientDisconnection(sNameCommunicationChannel)
+      	gsErrorMessage="The communication channel does no longer exist. You must reconnect ('ConnectionOnServer')."
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False //no socket
+      END
+      
+      xTrace("Sending from "+bWaitForReturn+sMessageToSend)
+      
+      CriticalSectionStart(gArrHSocket)
+      
+      ArraySubscript=ArraySeek(gArrHSocket,asLinear,"sSocketName",sNameCommunicationChannel)
+      IF ArraySubscript<1 THEN
+      	gsErrorMessage="Unable to find the characteristics of the communication channel."
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False 
+      END
+      
+      
+      IF NOT WriteIntoSocket(sNameCommunicationChannel,bWaitForReturn+sMessageToSend,gArrHSocket[ArraySubscript]:sKeyForDataEncryption,gArrHSocket[ArraySubscript]:nTypeDataEncryption) THEN
+      	CriticalSectionEnd(gArrHSocket)	
+      	RESULT False
+      END
+      
+      //wait for a return?
+      IF bWaitForReturn THEN
+      	gsLastReturnInfo += ReadInSocket(gArrHSocket[ArraySubscript]:sChannelName,gArrHSocket[ArraySubscript]:sKeyForDataEncryption,gArrHSocket[ArraySubscript]:nTypeDataEncryption,eTimeoutForReturn)	
+      END
+      CriticalSectionEnd(gArrHSocket)
+      
+      RESULT True
+     type : 458752
+   -
+     name : LastError
+     procedure_id : 1181131416782292338
+     type_code : 15
+     code : |1+
+      //returns the last error for one of the procedures found in this set
+      // Syntax:
+      //[ <Result> = ] LastError ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	string: Error message
+      
+      PROCEDURE LastError()
+      
+      
+      RESULT gsErrorMessage
+     type : 458752
+   -
+     name : ClientGetLastValue
+     procedure_id : 1181139250873932386
+     type_code : 15
+     code : |1+
+      //returns the last character string retrieved by "ClientSendMessageServer"
+      // Syntax:
+      //[ <Result> = ] ClientGetLastValue ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	string: last retrieved string
+      
+      PROCEDURE ClientGetLastValue()
+      
+      
+      RESULT gsLastReturnInfo
+     type : 458752
+   -
+     name : ServerStop
+     procedure_id : 1181139727615347300
+     type_code : 15
+     code : |1+
+      //Stops a server (started by "ServerStart")
+      // Syntax:
+      //[ <Result> = ] ServerStop (<NameCommunicationChannel>)
+      //
+      // Parameters:
+      // 	NameCommunicationChannel: <specify the role of NameCommunicationChannel>
+      // Return value:
+      // 	boolean:   
+      //Example:
+      // ServerStop()
+      
+      PROCEDURE ServerStop(NameCommunicationChannel)
+      
+      gsErrorMessage=""
+      IF CheckWhetherConnectionExists(NameCommunicationChannel) THEN	
+      	RESULT ClientDisconnection(NameCommunicationChannel)
+      ELSE
+      	gsErrorMessage="The server is not enabled."
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      END
+     type : 458752
+   -
+     name : CheckWhetherConnectionExists
+     procedure_id : 1181140165702113257
+     type_code : 15
+     code : |1+
+      //Used to check whether a communication channel exists
+      // Syntax:
+      //[ <Result> = ] CheckWhetherConnectionExists (<sNameCommunicationChannel>)
+      //
+      // Parameters:
+      //	sNameCommunicationChannel: <specify the role of sNameCommunicationChannel>
+      // Return value:
+      // 	boolean:  
+      
+      PROCEDURE CheckWhetherConnectionExists(sNameCommunicationChannel)
+      
+      xTrace("Checking the existence of the channel "+sNameCommunicationChannel)
+      IF ArraySeek(gArrHSocket,asBinary,"sSocketName",sNameCommunicationChannel)<1 THEN
+      	xTrace("Channel not found")
+      	gsErrorMessage="Unable to find the communication channel. You must connect with 'ConnectionOnServer'."
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      ELSE
+      	xTrace("Channel found")
+      END
+      
+      
+      RESULT True
+     type : 458752
+   -
+     name : xTrace
+     procedure_id : 1181146354750052037
+     type_code : 15
+     code : |1-
+      //Procedure for internal use
+      //displays information about the current process if bTraceMode=True
+      // Syntax:
+      //xTrace (<sInfoToTrace>)
+      //
+      // Parameters:
+      //	sInfoToTrace: <specify the role of sInfoToTrace>
+      // Return value:
+      // 	None
+      
+      PROCEDURE PRIVATE xTrace(sInfoToTrace)
+      
+      
+      IF gbTraceMode THEN 
+      	IF InPocketMode() AND NOT InTestMode() THEN
+      		Info(sInfoToTrace)
+      	ELSE
+      		Trace(sInfoToTrace)	
+      	END	
+      END
+      
+      IF gsNameInfoProcedure<>"" THEN
+      	WHEN EXCEPTION IN 
+      		ExecuteProcess(gsNameInfoProcedure,trtProjectProcedure,sInfoToTrace)
+      	DO
+      		IF InTestMode() THEN
+      			Error("Error in the network communication during the call to the procedure for updating the information run.",ExceptionInfo())
+      		END
+      	END
+      END
+     type : 458752
+   -
+     name : ServerMessage
+     internal_properties : CAAAAAgAAAAVukSjLc81cO3gJTjFGoBA8guNX673QELcT+e6bUGbBl3jmsLrgk7DVl2IdDMhxo1ehQWGCUF4gah9K/RV9DUuHKctKNrr5eUXWCXsNrPeqWBufQBLRpGLt66fCMVdvvgOqEaxpMJKsrt2UkfimNJrT7FLdgfe9wfXd4nsFKwXdc+C6hpc6GMyCxynD3p1phq+eylaDhuLTOqqOqc+LIlTCKWVBTb16G80LFJXOQbVPOs3mvBFeqGQ1xh645QyxJv5MhL247Po7R/IVFYpULuoij/acVVE8DMmuM7DMGLGZnNTWkCotpOYt18=
+     procedure_id : 1181182831803025328
+     type_code : 15
+     code : |1+
+      //procedure internal to the set of procedures
+      //This procedure is automatically called when receiving a message during a local communication between two applications
+      // Syntax:
+      //[ <Result> = ] ServerMessage (<eNumWindowsMessage>, <PtSocketNames>, <ptMessageSent>)
+      //
+      // Parameters:
+      //	eNumWindowsMessage: Number of the Windows message received
+      //	PtSocketNames: Address of the procedure to run
+      //	ptMessageSent: Address of the string to retrieve
+      // Return value:
+      // 	Undefined type:  
+      
+      PROCEDURE PRIVATE ServerMessage(eNumWindowsMessage, PtSocketNames, ptMessageSent) 
+      ArraySubscript		is int
+      sRetrievedString	is string
+      sSocketResponse		is string
+      sNameMainSocket	is string
+      sNameCallingThread	is string
+      sNameCtChannel			is string
+      eMessageType		is int
+      
+      
+      xTrace("receiving a message by the main thread")
+      
+      sNameCallingThread=ExtractString(StringRetrieve(PtSocketNames,srASCIIZAddress),1)
+      sNameMainSocket=ExtractString(StringRetrieve(PtSocketNames,srASCIIZAddress),2)
+      sNameCtChannel=ExtractString(StringRetrieve(PtSocketNames,srASCIIZAddress),3)
+      eMessageType=ExtractString(StringRetrieve(PtSocketNames,srASCIIZAddress),4)
+      sRetrievedString=StringRetrieve(ptMessageSent,srASCIIZAddress)
+      
+      
+      CriticalSectionStart(gArrHSocket)
+      
+      ArraySubscript=ArraySeek(gArrHSocket,asBinary,"sSocketName",sNameMainSocket)
+      
+      IF ArraySubscript<1 THEN		
+      	xTrace("Error: Unable to find the correspondence of event #"+eNumWindowsMessage)
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      END
+      
+      
+      //if procedure to run, run it with the integer passed in parameter
+      IF gArrHSocket[ArraySubscript]:sNameProcedureToTrigger<>"" THEN
+      	WHEN EXCEPTION IN
+      		IF sRetrievedString[[1]]=1 THEN
+      			xTrace("Message with response")
+      			//with return
+      			sSocketResponse=ExecuteProcess(gArrHSocket[ArraySubscript]:sNameProcedureToTrigger,trtProjectProcedure,eMessageType,sRetrievedString[[2 TO]])
+      			//return										
+      			WriteIntoSocket(sNameCtChannel,sSocketResponse,gArrHSocket[ArraySubscript]:sKeyForDataEncryption,gArrHSocket[ArraySubscript]:nTypeDataEncryption)
+      			_EVE.Return=True
+      			xTrace("Unlocking (end of execution of procedure with response:"+sNameCallingThread+" )")
+      			ThreadSendSignal(sNameCallingThread) //unlocks the calling thread
+      			RESULT True
+      		ELSE
+      			xTrace("Message WITHOUT response: Immediate unlocking of the other thread:"+sNameCallingThread)
+      			ThreadSendSignal(sNameCallingThread) //unlocks the calling thread
+      			ExecuteProcess(gArrHSocket[ArraySubscript]:sNameProcedureToTrigger,trtProjectProcedure,eMessageType,sRetrievedString[[2 TO]])				
+      			RESULT True
+      		END
+      	DO
+      		xTrace("Error: Immediate unlocking of the other thread: "+sNameCallingThread)
+      		ThreadSendSignal(sNameCallingThread) //unlocks the calling thread
+      		RESULT False
+      	END
+      END
+      
+      _EVE.Return=False
+      ThreadSendSignal(sNameCallingThread) //unlocks the calling thread
+      RESULT _EVE.Return
+      
+      
+      END :
+      CriticalSectionEnd(gArrHSocket)
+     type : 458752
+   -
+     name : WriteIntoSocket
+     internal_properties : CAAAAAgAAADLJXbdPgBIiwXciee6z138wH+pz4pLVKdPzzGhI/lQlICtgJ3CVlAS5610nCDKMD1VrzTMy0qomqZOXUXW/+gaPgM3UZL41mCkpPvDpOcwWn0WQ+GaGEyTdHacflc0Zg/yeOjqmbq5VfYCQ6Gw/WRZzTbELrne+9bAgHaK3v3KoLyvt5WbyQTbPQGGC/hQ5/Sp1FRxMURHoGKf7TfhLQ+K/jo=
+     procedure_id : 1219023753049861543
+     type_code : 15
+     code : |1+
+      // Description of input/output parameters of 'WriteIntoSocket':
+      //Procedure internal to the set of procedures
+      //
+      // Syntax:
+      //[ <Result> = ] WriteIntoSocket (<sSocketName>, <sInformationToWrite>, <sKeyForDataEncryption>, <nTypeDataEncryption> is 8-byte int)
+      //
+      // Parameters:
+      //	sSocketName: name of the socket into which the write operation must be performed
+      //	sInformationToWrite: information that must be written into the socket
+      //	sKeyForDataEncryption: encryption key used to encode the data.
+      //	nTypeDataEncryption (8-byte integer): Type of encryption to use: cryptSecure (RC5 algorithm on 128 bits), cryptFast (fast encryption with an algorithm on 128 bits), cryptNone (no encryption).
+      // Return value:
+      // 	boolean:       True if the write operation was successful, False otherwise
+      // Notes:
+      // Procedure that performs a write operation on the specified socket
+      // This procedure performs the conversions if necessary (PC<-> Pocket ) as well as the compression of data
+      
+      PROCEDURE PRIVATE WriteIntoSocket(sSocketName,LOCAL sInformationToWrite,sKeyForDataEncryption,nTypeDataEncryption is 8-byte int)
+      sInfoActuallyWritten is buffer
+      nArraySubscript is int
+      
+      xTrace("Write operation into socket "+sSocketName+" of "+sInformationToWrite)
+      
+      CriticalSectionStart(gArrHSocket)
+      
+      // Search for the communication channel of the relevant socket
+      nArraySubscript = ArraySeek(gArrHSocket,asBinary,"sSocketName",sSocketName)
+      IF nArraySubscript < 1 THEN
+      	
+      	gsErrorMessage = "Unable to find the requested socket"
+      	
+      	ErrorThrow(1,gsErrorMessage)
+      	RESULT False
+      END
+      
+      //On a Pocket?
+      IF InPocketMode() AND NOT InTestMode() THEN	
+      	//yes, transform the Unicode into ANSI			
+      	sInfoActuallyWritten=Crypt(Compress(UnicodeToAnsi(sInformationToWrite)+Charact(0)), sKeyForDataEncryption, nTypeDataEncryption, False)	
+      ELSE	
+      	sInfoActuallyWritten=Crypt(Compress(sInformationToWrite), sKeyForDataEncryption, nTypeDataEncryption, False)   
+      END
+      
+      xTrace("Actual writing into socket of "+Length(sInfoActuallyWritten)+" bytes: >"+DisplayInClear(sInfoActuallyWritten,True)+"<")
+      
+      IF NOT SocketWrite(gArrHSocket[nArraySubscript]:sChannelName,sInfoActuallyWritten) THEN
+      	gsErrorMessage="The send operation failed. "+ErrorInfo()
+      	xTrace("pb writing on the socket")
+      	ErrorThrow(1,gsErrorMessage) //in order for the entire error to be retrieved by ErrorInfo()
+      	RESULT False
+      ELSE
+      	xTrace("Write operation performed")
+      	RESULT True
+      END
+      
+      end:
+      	CriticalSectionEnd(gArrHSocket)
+     type : 458752
+   -
+     name : ReadInSocket
+     internal_properties : CAAAAAgAAABSvbU1n21mNPcIbAbMPF+eRl0W9ipysA74MabrRFG5pA+bgCl26aTEBoVtBXPxWWdUUuk63iCbIdxMGbgFKAOtzwex5GlmulAuIRskoL7U2ozKND2HV2Px1O712pQyUWKsnAGUirXk34JQgq1rx+PA4S6XLBBLKKiynLugpdkRZ5xnomkQOJdpw33bT5Xg1EVtbLXTMAlsSCb1HONgZzc3xg==
+     procedure_id : 1219025178979073124
+     type_code : 15
+     code : |1+
+      // Description of input/output parameters of 'ReadInSocket':
+      //Procedure internal to the set of procedures
+      //
+      // Syntax:
+      //[ <Result> = ] ReadInSocket (<sSocketName>, <sKeyForDataEncryption>, <nTypeDataEncryption> [, <eTimeoutForReturn>])
+      //
+      // Parameters:
+      //	sSocketName: name of the socket into which the write operation must be performed
+      //	sKeyForDataEncryption: encryption key to de-encode the data.
+      //	nTypeDataEncryption: Type of encryption to use: cryptSecure (RC5 algorithm on 128 bits), cryptFast (fast encryption with an algorithm on 128 bits), cryptNone (no encryption).
+      //	eTimeoutForReturn (default value=1): time-out in read mode in milliseconds (1). -1 for an infinite wait.
+      // Return value:
+      // 	Undefined type:     // Data read "in clear"
+      // Notes:
+      // Procedure used to read the specified socket
+      // This procedure performs the conversions if necessary (PC<-> Pocket ) as well as the encryption and compression of data
+      
+      
+      PROCEDURE PRIVATE ReadInSocket(sSocketName,sKeyForDataEncryption,nTypeDataEncryption,eTimeoutForReturn=1)
+      sInfoRead	is buffer
+      
+      CriticalSectionStart()
+      
+      //read the data
+      IF eTimeoutForReturn = -1 THEN
+      	sInfoRead=SocketRead(sSocketName,True)
+      ELSE
+      	sInfoRead=SocketRead(sSocketName,False,eTimeoutForReturn)
+      END
+      
+      CriticalSectionEnd()
+      
+      
+      //if nothing was read
+      IF sInfoRead="" THEN
+      	//no need to decode.... don't return anything
+      	RESULT ""
+      END
+      
+      xTrace("Actual reading in socket of "+Length(sInfoRead)+" bytes: >"+DisplayInClear(sInfoRead,True)+"<")
+      
+      //Pocket?
+      IF InPocketMode() AND NOT InTestMode() THEN	
+      	//yes, transform ANSI into Unicode and decompress
+      	IF sKeyForDataEncryption<>"" THEN
+      		RESULT AnsiToUnicode(Uncompress(Uncrypt(""+sInfoRead, sKeyForDataEncryption, nTypeDataEncryption, False)))
+      	ELSE
+      		RESULT AnsiToUnicode(sInfoRead)
+      	END
+      	
+      ELSE
+      	//no, decrypt (and decompress)
+      	IF sKeyForDataEncryption<>"" THEN
+      		RESULT Uncompress(Uncrypt(""+sInfoRead, sKeyForDataEncryption, nTypeDataEncryption, False))
+      	ELSE
+      		RESULT sInfoRead
+      	END
+      	
+      END
+      
+     type : 458752
+   -
+     name : DisplayInClear
+     procedure_id : 1219362273654314002
+     type_code : 15
+     code : |1-
+      // Syntax:
+      //[ <Result> = ] DisplayInClear (<sData> [, <bAllInHexa>])
+      //
+      // Parameters:
+      //	sData: <specify the role of sData>
+      //	bAllInHexa (default value=0): <specify the role of bAllInHexa>
+      // Return value:
+      // 	string:       // 	None
+      
+      PROCEDURE PRIVATE DisplayInClear(sData,bAllInHexa=False)
+      sDataInClear		is string
+      eCharacterNum	is int
+      eNbStringCharacter	is int
+      
+      eNbStringCharacter=Length(sData)
+      FOR eCharacterNum=1 TO eNbStringCharacter
+      	IF NOT bAllInHexa _AND_ ("A" <=sData[[eCharacterNum]]<="Z" _OR_ "a" <=sData[[eCharacterNum]]<="z" _OR_ "0" <=sData[[eCharacterNum]]<="9" OR sData[[eCharacterNum]] IN (" ",".",",",";","!","?")) THEN
+      		sDataInClear+=sData[[eCharacterNum]]
+      	ELSE
+      		sDataInClear+="<0x"+NumToString(Asc(sData[[eCharacterNum]]), "02X")+">"
+      	END
+      END
+      
+      RESULT sDataInClear
+     type : 458752
+   -
+     name : SendEventInfo
+     internal_properties : CAAAAAgAAADGgGKVTmffcvzc84y3aqR67HwWyJQAyjNGI61XjpfnEbFFDtM28Eis8EFUVjtHHydJHredmIuMplMzo+H4Ps9iWyt04N+37OhUxBBPepgoyHodOblwqvn1HpRPy93KBmakFaWYThuwMDXDtH7yYkxjWy4G9huEeR2UZzDa3IAa5BN1t1ZgmC3oxjQa03C7tZbnm4AA6rMVWoM6uwtM/q5UiX4YXDnKv3AtGVrbT5Vvt7iNzQ5CTIHgyIUpo1VMMZMe4VTFLkyBm5fSLIUixfBou04N/EB9Rgj1iw3rx7doSsH5J459tadlwvOaAQ==
+     procedure_id : 1240543905522266395
+     type_code : 15
+     code : |1+
+      // Description of input/output parameters of 'SendEventInfo':
+      //
+      // Syntax:
+      //SendEventInfo (<sThreadName>, <sNameMainSocket>, <sNameCommunicationChannel>, <sMessageSent>, <eEventType>)
+      //
+      // Parameters:
+      //	sThreadName: <specify the role of sThreadName>
+      //	sNameMainSocket: <specify the role of sNameMainSocket>
+      //	sNameCommunicationChannel: <specify the role of sNameCommunicationChannel>
+      //	sMessageSent: <specify the role of sMessageSent>
+      //	eEventType: <specify the role of eEventType>
+      // Return value:
+      // 	None
+      // Notes:
+      // Present the operating mode.
+      // Specify the special cases and limits.
+      //
+      // Example:
+      // Indicate an example.
+      //
+      
+      PROCEDURE PRIVATE SendEventInfo(sThreadName,sNameMainSocket,sNameCommunicationChannel,sMessageSent,eEventType)
+      sIdentificationCt	is string
+      ArraySubscript		is int
+      sSocketResponse		is string
+      
+      //ServerMessage
+      IF NOT gbManageMultiThreadMessage THEN
+      	xTrace("By the main thread")
+      	//---------------if everything must be generated by the main thread
+      	//run the procedure
+      	WHEN EXCEPTION IN 				
+      		//Information for the return of the procedure to run
+      		//- The name of the main socket, that is used to find out the name of the procedure to trigger
+      		//- The name of the communication channel to send a response (if any), and that is also
+      		// the name of the thread that must be unlocked after process
+      		sIdentificationCt=sThreadName+TAB+sNameMainSocket+TAB+sNameCommunicationChannel+TAB+eEventType
+      		xTrace("Send a message to the main thread in order to perform the operation")
+      		
+      		//wait the end of execution	
+      		xTrace("Waiting for the signal from the main thread")			
+      		ThreadWaitSignal(Infinite) 
+      		xTrace("Signal from the main thread received further to the execution")			
+      	DO
+      		Trace("Error during the call to the process to trigger on the remote messages.",ExceptionInfo())
+      		
+      	END
+      ELSE
+      	CriticalSectionStart(gArrHSocket)
+      	
+      	//---------------when each thread manages its own requests
+      	xTrace("No current thread")
+      	ArraySubscript=ArraySeek(gArrHSocket,asBinary,"sSocketName",sNameMainSocket)
+      	
+      	IF ArraySubscript<1 THEN		
+      		Trace("Error: Unable to find the parameters of the connection "+sNameMainSocket)
+      		
+      	ELSE
+      		IF sMessageSent[[1]]=1 THEN
+      			xTrace("start with time-out for response set to "+gArrHSocket[ArraySubscript]:sNameProcedureToTrigger)
+      			//with return
+      			sSocketResponse=ExecuteProcess(gArrHSocket[ArraySubscript]:sNameProcedureToTrigger,trtProjectProcedure,eEventType,sMessageSent[[2 TO]])
+      			xTrace("Sending the response")
+      			WriteIntoSocket(sNameCommunicationChannel,sSocketResponse,gArrHSocket[ArraySubscript]:sKeyForDataEncryption,gArrHSocket[ArraySubscript]:nTypeDataEncryption)
+      			
+      			
+      		ELSE
+      			ExecuteProcess(gArrHSocket[ArraySubscript]:sNameProcedureToTrigger,trtProjectProcedure,eEventType,sMessageSent[[2 TO]])				
+      			xTrace("Process without response completed")					
+      		END
+      	END
+      	
+      	CriticalSectionEnd(gArrHSocket)
+      	
+      END
+     type : 458752
+   -
+     name : StartCommunicationEvent
+     internal_properties : CAAAAAgAAAAE1B79frIVcN7hPNyEPMvTbdJru4Uoyc6Cs5E7G2+rWcBDUoA8EXJjCPgMG+ShZ+xDe+RMDRHWEGPjBsj3nc4Zu19DDsK4xZJGBuDSsg6F2ihbayY9mY7j0+JAZ56hX9rUc8oLPiltd1vYQxJpUJWEoyXkv/I5P1A9UAZdSySSSatqlUhWLJQpiD9jTMbRGnq19Aj9
+     procedure_id : 1296592567393985707
+     type_code : 15
+     code : |1-
+      // Syntax:
+      //StartCommunicationEvent ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      PROCEDURE StartCommunicationEvent()
+      
+      IF gnEventNum>0 THEN
+      	EndEvent(gnEventNum)
+      	gnEventNum=0
+      END
+      
+      gnEventNum=Event("ServerMessage","*.*","ExecuteCustomFc")
+      IF gnEventNum=0 THEN
+      	Error("Error starting the communication event of threads.",ErrorInfo())
+      END
+     type : 458752
+   -
+     name : ConnectionViaThread
+     internal_properties : CAAAAAgAAADGGsA/NbxUvBrNSFicKAsbgWabT3EEMXr+/y2fKwvDwbyn2hwQtRqHRNwIJ4zN9/xX76QoYQXunI+HcsSvqUbh7wMD+vacLWbyqmqsCJh/4K6JBfCba1hteTwSuQyLadAiOVwVhHPP2XmKXTy34hcKqSsusUB7cTr7QmgXEWZs93m4Z2p8RsYb7um9PjRS3bx3Nsq7
+     procedure_id : 1310670207568636712
+     type_code : 15
+     code : |1+
+      // Syntax:
+      //ConnexionViaThread (<sSocketName>, <ePortNum>, <sAddress>, <eDurationConnectionWait>)
+      //
+      // Parameters:
+      //	sSocketName: <specify the role of sSocketName>
+      //	ePortNum: <specify the role of ePortNum>
+      //	sAddress: <specify the role of sAddress>
+      //	eDurationConnectionWait: <specify the role of eDurationConnectionWait>
+      // Return value:
+      // 	None
+      
+      PROCEDURE PRIVATE ConnectionViaThread(sSocketName,ePortNum,sAddress,eDurationConnectionWait)
+      
+      //attempt to connect
+      IF SocketConnect(sSocketName,ePortNum,sAddress,eDurationConnectionWait) THEN
+      	//send a signal to unlock the main thread
+      	//ThreadSendSignal(threadMain)	
+      	EventChange("CtSocket"+sSocketName,eventOpen)
+      END
+      
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+resources :
+ string_res :
+  identifier : 0x1018debd02bbc3ea
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

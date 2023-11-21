@@ -1,0 +1,591 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : WIN_Main
+ major_version : 28
+ minor_version : 0
+ type : 2
+ description : ""
+ subtype : 0
+window :
+ name : WIN_Main
+ identifier : 0x26d83d6b0299cf4d
+ internal_properties : CAAAAAgAAAA7TC1bwm5b9FO3U52qdlETpk2qgquJcE15pUFSjAioE43RWHKQzJiFm4nGOo7vX3RVN5pMrQfAn27FuZ33XpBhOKZi/wE+0gpxZ+uDi4BHtQxmrISJh8IZTdtZqfI1SI8vE9fDFUFqDHMuqOmg1Pu1+BMJNbUAI0VoqiOkvoEnINn/fnnjMPE4U694FVvTZwI6ik+U1mIhOMzDgsG7HMK+qx70kDHqJA1jhwko6BET18CKkiflFrv8zH+8aX7tY37OuW5IID9S3YM9BUFHqXXe8Rhnj9AkeID2QUQrYBuNNPEklabUX3XklzBFsApTr8N9J9zRlyTYzq/81lBSGPlWtjKj4Gs0V46iW7dQEs082Ef3wzgeTVQCikIx931RZlo7ZN9Ev6kzphb48LIGoXNS/Hxv6pleuty0G8WC4Vs3gstOngQJh5/oj0A0r6YsMKLWKSxy2ekplPbpk33VhhieNTJzS1+ulUw22rvsbmfg2Rri99tlQ2t8WpZnt0WGfMZqLgXQOWacFOkTLCZAj9KnR1Hg+cOwcRynPGEL78YrsP564adCGSJYQy7swyv0ed3ltW8XXjxJEB05Znncu6nG/8ZL8jh+pwuMvj8yx1SM+pdLsUmfGQEC96h487D7cnFVxTS5S/2mCj0cUrMgsmaSZ5XSyT1SfS/oXeSkR44DvOg0Ud9yW29awP6IaZ1Ab+vqhs2QrTyoxXc4mYaQ35Hx4VbsvpTFI1dJSZFTO5QCmYHyDDOpWIINSbP3LZ4cOsKTD7sjJ04OKSqRNFviY7PiZ58jTGvz/4gsmifmklU0J6unRtLgvGgHqjLpFrUYz84iEKYIEg0D5+SZ1Jvx3UjoFnSqsUeyEdFqJT507C8tTCI74M+ND5nmKdRk3XJOXHtYKbBSwH2T7qPvAKPdxhv2uA+J0lf8nQ7VeSypf4zdpK5h9GrYtgeSI2RM94v/7zO/ozKonA==
+ properties :
+  width : 547
+  height : 337
+  widthClient : 545
+  heightClient : 305
+ controls :
+  -
+    name : BTN_PC_CONNECTION
+    identifier : 0x26d83d6b029acf4d
+    internal_properties : CAAAAAgAAAApqfG+fubRmVrK7D5vOQrFwsNl3lvVMZtq2eVrZ6mf0zQdw45UFlDXvYHaqDxvERbLYOHRuyKeI2jvLb+xMyhMFWhviHVpQ9gypGxqtqXx3rWAcWSDfFMCWoByKXwFRTTMMU9dAayugrz2ENu7tfQDZMjI+i30VyV2DzyeRELXMVLm/YO2jaZcHxJvkSWfcoFtMc6+7Do+37BS9iit+mrWh6wWb6nuBiLdr36lUycXLwBvX+wM869K6+KNlG7nlwczgCfO4xIZIqYZtAf7KwzH5cTCRtkCaU42sxFvmvxmja+88zVBjE2/AqPwgX4elQIFNoAv8KvL2xdkORCpAiz/a3oQ+ecfPwC26RY5W8XB8D5LhEhYClpRnwNuBKdaEptnPBoc2sf+RKD/yeqLF+AK3LFLb4PQmFP4KiPb6wn55qdWx5K31YIqMiIhncAaOxbO3z5cpwGbQfV3+S+X4wyi/pag3FSuichzudDNqRLc9AeMWHiwdIgPxmMJcUsRI+8SxoqhY7RAt5RWwqqQVbhDnRRQWBtJNgADrvy2mPik3bsXG/OtHMtlf7P3Frk3+5MLKFxcdksVVf2YnJBMvCyD/DadGgocN+GCu7DqnIa0xip2tN+UuOAI4K5QU+9hoWf+TnXQS0Lw4IbnuDEIE0q5A997zSMWLBdiz0PF0wCyPyPRejI21343LeaRpEPx8ftkhX121dVnh1PyFIxOlLkH92+xbcoSjiXObXtV/hAt25W46NnngbIFtD6wThwcrgrRz6kxSbW0rDNJPEBDncWBF9uleD/NqGLer/Vwa43yAhqVOeoUliKaO75b4LM4pfoPRiOjJrT1sDN3m2vFDEfE2wZaPiN6wgSwxMygMEOhkCD+6Q5LwnAONGIn/ZvTH4tDlXUDyMYSHEKB7i44bmvCogoayYTxqAp+jBDRa6EYMC42
+    properties :
+     x : 18
+     y : 6
+     width : 93
+     height : 84
+    type : 4
+    code_elements :
+     type_code : 4
+     p_codes :
+      -
+        internal_properties : CAAAAAgAAACEutynWrQFIuEUMLMeNrV2XwIK2abmQLDBRqItBB79AUyKnZMOthXIcHE+VfNC9i9oHPekkaEea4qmm03x9IAXcje/3lmyAk6T+Klow+5I2s2TkD6UxBM=
+        code : |1+
+         // we must connect by socket
+         
+         
+         // Start the server => To accept the incoming connections
+         // Start the server by specifying that the procedure that must be called when receiving a message is the "_SocketMessageReceived" procedure
+         // Leave the default port (5023)
+         //1: Server
+         //2: Client
+         SWITCH Dialog(<§?1423C76A00F142A5§>)
+         	// Server
+         	CASE 1
+         		ServerStart(NAME_COMMUNICATION_MESSAGE_SERVER,"pMessageReceived._SocketMessageReceived")
+         		
+         		// Assign an application name
+         		gsApplicationName = "WDCommunication - (ID: " + TimeSys()+")"
+         		
+         		// We are connected (or the server was started, it will have to be closed)
+         		gbSocketConnection = True
+         		
+         		MyWindow..Plane = PLANE_WAIT_CONNECTION
+         		
+         		gbServerMode = True
+         		
+         		
+         	// Customer
+         	CASE 2
+         		
+         		// Assign an application name
+         		gsApplicationName = "WDCommunication - (ID: " + TimeSys() +")"
+         		
+         		
+         		// Switch to the plane for connecting to the client
+         		MyWindow..Plane = PLAN_SOCKET_CLIENT_CONNECTION
+         		
+         		gbServerMode = False
+         		
+         		
+         END
+         
+         // make the Home button visible
+         BTN_Home..Visible = True
+        type : 18
+      -
+        type : 161
+        enabled : false
+  -
+    name : STC_Click_here_to_connect
+    identifier : 0x26d83d6b029bcf4d
+    internal_properties : CAAAAAgAAAB1C3w8xISdxNSHnTcZG6dL4jeYxOGX9Cs4W/LusTxzYhVHVlNKll+PgsS3IYRY28AbJh6mYxSbV7a7J+oay7p7tdOMiYCoh3i0uCTlBEEjwZiiBDuhgk2PXF20jtH5hBY6cPC4VyGLPpBSkp7yv4n9ifDnwY8ceXWTSMyam6hu3aCY0EJU0bxrXh6nZaYkgYXAhGtovxkhhNTGgpiTYZ6a1wpTwr+Ym021D8BxNEDGocoyIFDnqymCZt1IGTt3FjkdJJnNCOJBnHUSby3JnNUofeaAnFEhuwcgZdumQHtQR9Miks37ZE/LEeJSrE9gJdfOirRdANBijtXsi66JeEv3+8u+vU2PelWBA3ere8IvNKeUgj6KbpU++bzGrj/9uX+j+Ns/3BE+RZ1g165RrQOApMHq1PN5/MYX7/PgIGIjCWSEgeBo3KXMkbH4AKBfW+FCeaAzKzQosj1qDiPhNUVayZ4rmlfaKAKLnUpfUb/aINWgaekdxOtjPV63kFRriC7/fnKXRGuY0cYs4I9o2V2vbzsyt2/1uRJuR1k0+RtgWHFczFlf+OPsbHVwNqsT2/zlezDRqIrPpxw+5Mfhf+pU2q9U3B7rxtjE7UUyDOtuBbdOhMKBanobjqnyPTFt1Dr/y+lbfFiebWlvPaxp3OVLtWb/79Cu2ZrMhYR8eSMzCmnO3/xoAWIeQ0mPC6Zuq809j5xY7qrXDNo0/WRSP7Hr1GOmCCYlF/H2dR24Vg4LgxzOcTEF426Q1Ch6uKb7cC7j+nQSkGO3YDyPM5h1ZS+0KernRxtTMG6YUjB5RboSkzCiYAc=
+    properties :
+     x : 114
+     y : 8
+     width : 418
+     height : 84
+    type : 3
+    code_elements :
+     type_code : 2
+     p_codes :
+      -
+        code : |1-
+         
+        type : 18
+  -
+    name : STC_Click_here_to_connect2
+    identifier : 0x26d83d6b029ccf4d
+    internal_properties : CAAAAAgAAABLyr9SgOqniKeAVgY4DM+OuUbtwWQBuu5RUCibFqzDBqU3ctt4zjUuAS5ZkNZuCIAYGA/73y6MedEquebw65cLCuBFiEtREVCjFkX+XpAWYT7ENMVpNl1zMUz/fd/PshDeROIy4papNpx10ux0Li29ZM7Jj7AmquOkpPcQj9cUNiuSMXKKYPIPHAKUu18DPBnwTgbJ0MEdp5+uz4EnL1Ys4flZ8Hsj8gexEVWpffOTgZPoLb1FcNzG29n5j2El59jYWLwTIxOAPRxDwLYcvtCohQY4ZsOYMBmxLQ7xe46wQpKSjCPoZ+qn0gxWydkPevKSS/rXQ488POwSPP1LQlXFL+wLYjHu7jwQmi8YP8XRv2Lie0ApNNL19vbzrQimxc+tiICNldgtRTED1Y7LhGYm0EQIuT45M9ZIimjdFwLDVniiBOm0a2Tf9wuf9/yNRC8OXadIDykxclEx6mN3KEVdMt1/qkWsz7I5KNrQ74yp+ltWcEb8srD+46FpVUAxTro1FmExRqELPhuPKNOZJTFOMG5vcC79emI4qBBk2a18bcY1v/y2yylY7XaRpRFyD0inADxVmIyQyFd9ifK1VgUCbmeKWjLH/UBPi68IBCVdJd48wA==
+    properties :
+     x : 117
+     y : 118
+     width : 389
+     height : 43
+    type : 3
+    code_elements :
+     type_code : 2
+     p_codes :
+      -
+        code : |1-
+         
+        type : 18
+  -
+    name : BTN_PC1_CONNECTION
+    identifier : 0x26d83d6b029dcf4d
+    internal_properties : CAAAAAgAAADEOXNCfgVQBeVW9q93gjJwz/p6mmvVAU9cDHrwAmjLkrimsvhtJBHiB2bQLljq5LkZjDJyDJplYfV04+n0tolqUsbMrgYajvP+LHGmZ3yzPrJyEtwsiGKAvdocgLg5nTCw/jHWDzPU8lw3Zc117bl35tXcnDSjHtMY6jjoGzEk1enjk+EjT5DY+Qs571mPKXDJCv1s7sFetps8P/Bbko0KZObXtYGYG5l5F8EyA0D4fOrpKP1ui8B/KvLngp1Xr/QECcVRrVZ2ok6KSMXIyF7aGCL7qr60rN2LENMHjeS3PoyOiwwq+Tlmq+a6g/dR07o1Ci9Z8Im5SA4FiFNfVTo4MIGSbijPpwS7F4ExF5r5iUA7S6kZt34JRv7lIKo3yuM/AnMT/20VXlqezq0hbmKe4ncaOx7SPtqvoGGybPU7Gwv+S6PyrN0yuYaH/szEksoxH+k9WNQuwiPb4ehrw0U4nWrAxw9dH0rK/BnsQXa0WMlNVZdSkNjZjGqzC0NS48bWfrcht6cvwWS8wc62d4wPJIbPEXOS8iwWhMSxFyhvpydC6G7au2qy2wnQJk85x+JZqxHMmUYQ0Ol2zAx8c8vL3AAGMN6I3yP6hSbSOuolXw5jr/RO7oQmVK+89f/lEkFhZvZNNHthrcN9ybSliiIj9sgEgzgUkZVZRGCSdSEGTKfr0X+d2cNMAjI89N8QZdZGhvq8hriI6/AAZBAOgWGAh+3ytsk9rl+YY9mjciZZkVxBLVWowWe3gS9xzu2CjMdKl6c/pVKBg8sVqtNteYIzqmi6Oj/iIUoJReusbqaFJsoz4+3jEfmgaphUSFHna+vFdwnzP80U2uYpi+eo0Q7YbS/nzbq+t+0Vrc4z1O5t5L4f97thDDz1QGi8pidH1FfyFbm7ULll464tOJAOSwXIO38VqvXVlgfmDg==
+    properties :
+     x : 18
+     y : 96
+     width : 93
+     height : 84
+    type : 4
+    code_elements :
+     type_code : 4
+     p_codes :
+      -
+        internal_properties : CAAAAAgAAADAkNut2/oU0Fbsh8topCBWO7oxr+Xuwt2QC1PYHcbeVVA3jgFdWm+lIdt8nhowW7tweCGOb5CmOOSVNjJsr7W8SDsNrFsjM0U6hZGjjBXJIEimgy/zDiKAP5B0Zlfr8IpLpmVvW5GvqIcBgTgg0fDcUCC2AxVhkjmxd9Y5eP/KEerJQQ==
+        code : |1-
+         
+         
+         // Start the communication channel between applications
+         // This communication channel is performed via Windows messages
+         StartCommunicationEvent()
+         
+         
+         // Declare the Windows message that will be used to communicate with the other applications
+         // This message will be "COMMUNICATE_APPLICATION"
+         // The "_LocalMessageReceived" procedure will be run when a message is received
+         // The name of the application is used to identify the provenance of a message
+         // The "*" parameter indicates that we want to receive this message regardless of the window currently run
+         LocalDeclareMessage(NAME_COMMUNICATION_MESSAGE,"pMessageReceived._LocalMessageReceived",ExeInfo(exeName))
+         
+         
+         Info("To check the communication by shared memory zone, you have the ability to restart the executable of this example and to position on this same window")
+         
+         gsApplicationName = "WDCommunicate" + TimeSys()
+         
+         gbMessageConnection = True
+         
+         // Goes to the plane for communicating by message
+         MyWindow..Plane = PLANE_COMMUNICATION
+         
+         // make the Home button visible
+         BTN_Home..Visible = True
+        type : 18
+      -
+        type : 161
+        enabled : false
+  -
+    name : STC_Exit_the_application
+    identifier : 0x26d83d6b029ecf4d
+    internal_properties : CAAAAAgAAAAPV+FuWsJwIuPfnGlz5O69LlmNOZYFrpAOzuy6qnlW5fQYpVLpkhU+eTiqKZWo01TlzCh6KUkITlllztnqFAvSpxEPFXLgTfKQPJIbONfCjG3T7w0F+8+eDZqy081mfUcIJcPouFKhz0PqZO/IzhGhVpH0YMl9i1IIb7IZtwr39bnxnnY5lAJsyFBs0HDAfchI4XrOA2Vjn9/b0DG4bUr1tLd6Se0tQKVC1hcCNPt8u2P8bkmwRvFnALYxXB9jH7ljnZuAixluDps4PJBp7fRULM7oJh4sJJ12o8oAAAZ3n5nZr2cOCFzk+gxhtm2W415MHvADrKt2/Rj3+znZG7eaVJDF/TXbSZbfbYULUGAutdEFkfxSo081rUekCszjxTYUem4DmeuVotaLKnLPTOUW8DYqZd7UdFmLqHo2nefTD9l4ihfN82mAiCakp/BIlCRg1v//AJA90UE2KVFSh81ENDHS4jw6XQ6P2LybmWKm480zO5YAI5ERJv+IsFzBDfYUHA==
+    properties :
+     x : 117
+     y : 215
+     width : 389
+     height : 43
+    type : 3
+    code_elements :
+     type_code : 2
+     p_codes :
+      -
+        code : |1-
+         
+        type : 18
+  -
+    name : BTN_EXIT
+    identifier : 0x26d83d6b029fcf4d
+    internal_properties : CAAAAAgAAACq69c3NtVk+MCm5n5p2T/80Y+O9qmKYWpYPV5zZAfeWDvCxFeepB6v22QEMmdr5SSjtUBegkQucgtyFN2xi8aXMuCi57GJwEbLFsJegqhhZXLRYJEl+BEmk9IRryA05WjXJSbK7aZvkvkM4c3B3DOTAzCeaNf4r+UBlSoTQy/1YB43nI2UBkYmp0BXW1clKIxNZmOknUXacuHb700Csp1ygfYOmhs8Ddr9eS+Xn/GPEHDDN1ooVkPzMm68opWYyIR3/3tVG5iNHn1TDKnJlFDNyWZEhiZGu47iABziR5GVupaek/6HevEnGUnhoVelsC+d7TLicddOf+YYGGJ5Uw/gsxjaW+iuwDub1eLWmy4mzjOYxxL56H3S5tpGeLx3b9l3MgPG8Gbz98EHvmaHKlizFziWzJ7aNHGn9jWYUUXZR11WFKCja8G33q/6XP/Jo2h+8vTI/TEgiJ9vIGAQXuIOFPt7Mb74fxaNxVGPuXt/S8EonbOEpAomYVjVfK+ylJOytlC0eMth7HaDMATIgbtNNY2kxYepzyd19dMu2lz2Eg1KzBIagKph4dWhrIYqhPeZinDZa2khGdOyAU7EbL2btcPuRXJSbMKfj7J2OoKun6ogk514SB3zXQUhW7Y/qqhYRr+3XwTb+XO6jOR4epLon9ZhSa/5dk//MwPNR8FDzUjZUECRxG5OMtrA0N4i6VjKL1uHCXoy6nEcOsjCoW+ZHxlGSP7WAgcNKbv1fr/9h9Fg6U+Rz4SBv351HtBX9h3w9I9V/y1w9P8iWIR4WA+1Ov3ZHIqDd0VT0Fr1wIwyTDutPEF1GQsM30kKOOL2CW0NU7Fps7GXNk7JqR/2EI/VV6jkQ53bC2YbDu6Tv6gJkl+b
+    properties :
+     x : 18
+     y : 186
+     width : 93
+     height : 84
+    type : 4
+    code_elements :
+     type_code : 4
+     p_codes :
+      -
+        code : |1-
+         Disconnection()
+         
+         
+         // Close
+         Close()
+        type : 18
+      -
+        type : 161
+        enabled : false
+  -
+    name : STC_You_have_chosen_to
+    identifier : 0x26d83d6b02a0cf4d
+    internal_properties : CAAAAAgAAAAeNe3gvET+PuX5AinzPiNmeflSv1RYZdChZAlJuRyW9piOV65rXP4RVBb/tNyTcrAPP/AbUlD45vHQtPWeM+ssIz65dA03t1r50gxwmWhl1jDplJdtU4+fcV6c7rIU/JQWIvOB+qPgh70VVWoifW9kA/pkn28I9Vj/V1wQ8h8/4ONL1vlwU9ydBJ+KZ0ydZSJU4D+YDffnuFfJNG6UMjHuZmRs4GXTDf8GGRkaxnvAKreVEj8CYL0qpFAE6M9I5Tnl8WSKRDDZOeDXNvuSGKUjf5LBK0Y7HxiPVeB584HAzAcOznLzaeFU9IsAvVDM6lKUjLE85TBC9YX+0s7sOQnZzbf9Gh5X6aohOfEtX05NCSjourWCzRhNZULaSRBjkgdIEbnSQWYRqghmBmkEdJ/bVhwyOBhWir0WDIHxiyTty5ZupieccgYi/GXteIwAs/jUOsULHovVSpBrOJm/czYIPQXt/6eTi+AUThzZF92UiZm7i1wB4ULPx31t6f+OnfLfmnO9bGA5vs9DN11Qu+BPepXUcr3VqOyv1rbBZi1H4uBfmSEMdb1O6oGzP1y7LhaMaeOBQQpBzip1v8i++QYNC+TO9iW7pNNoFALyOC84P1zXxivWjfiqrvCTjRg9kCmc0huiVqyhwKs7XWg6Y97/OenQkGO+ybvxxJBS95CPEf5KNoIRaKMoll4wAVU3eHRB3/muDYf4EhcOe3Wtqvg7C/Gez7WS0EXe9K3/SqnNy7ONuPRqKJCJwXiQvV9qHzox9w2QT33CQM5UYvzIUB7kA7u5ffBzxiP8pLiW1oNKcRpuLVQIFzqidlrfPwedai8IU6B+HUuNG99ShHsCGhES
+    properties :
+     x : 6
+     y : 6
+     width : 533
+     height : 112
+    type : 3
+    code_elements :
+     type_code : 2
+     p_codes :
+      -
+        code : |1-
+         
+        type : 18
+  -
+    name : EDT_IP_ADDRESS
+    identifier : 0x26d83d6b02a1cf4d
+    internal_properties : CAAAAAgAAAAqH4JxRXoesuoHcxkCl4E5HVTfk8zaPXlJR0DjTKylGnpY6L8mboKyFgUemFjWgDzH+lsFhu4AUrJIbJlHKEFrf9zDQcF6/zqBUjvfoeNjzsy0Y15d942OTby7xGFRA6fD6JRqWUCpvOy2W8LJOucJugBv0HCVEml5swS6+TbKPuyypVAxCO+/sKFH/zZSWlOUeDYxDy97Z1lEtcauCJnWD5aDElbzuNLoOOyBwvAMd99fdIxoV6ALeD4OrsovQXbd6oMihPxcoeQLm9jg+m15XTspQbQj5JF86xbeAWFQrQhPBRV8bSgeNdBC9pR/xIQSuPFOXV+c6NLfKKJkSxys0AKfgQLLFLT5UQiTjDVFCJ64pbStu7FugZDvzBKgReyj0iuDTaJ6YkzOm5BdQwigAg5wwDOnFSN6KdCa2SOi9XCw932Ny0Fjj50fG01X6POsopqOrVP5JUN9Pv3oNBhTdQda9nqYaOrVWi49ik9EAWWsg2q5PUFvadXuHPPGI/3y8T5N4P6F2Vfz3CZsq15KTGc4KUsxfYdljiu0wSFbA4prmdrHl1BR/S0oHBzOKGBmmce2Np9EKCK5lzFbwryD8xyRybCKKvcN8cXTIkNLC1hup8pYJFWFGB4wWBoBAjR+h5fNxAjxQMwpHGSiN07cScDlYmABLDeRyDWhn8qgBm/T1EfabhGgFPq/Gz+MVJjxNqP2w+8qZVxAeEUZ//wOOzGxzWZirMeuRsJE3+LAV3kaSuV7W1TwlYW/ywbLlk8wMUqPo21MZJ+t952Erhso/ziiqzhInJSmWFNFCL+GZ6QKjOlmwOXB8O1iCT6uCOgTQtdn1ZK1WPqdGXi7DMUeZ4mzlNYv7a635SHMfqbwnPjLkaF8pQFZkUxDwEj07Z2UVvtk99+1r83cS1BVYiwsTWqxNT0AZztxR542oSohcrszdnP+Wbpwuo84uj05kc4nfz/BF5wnThaaJytiSplkvqHpJbuiA0TxXm6bywSJ/pm1Kgx3WmoKvJY9B8rBRDQncOBJ22SiBx+B52fnpKCGn/3aYsocgoowZpDd6/Ziwlky0O3ov4ON3qMcmnEl2kwjzEFjWbQ3p5DVImwFNFg8gd5IA6DSqKf601yQGVGh00Z1LpH2tMobVJT24mZTWCAWu/UapbcthvZtPZE646U2T6L3ITtBGavHUBhH/XLj/Luka1p5bWEJfj4KR5Dsuo/pUSLNS6mnSS2g9rzogbIKYyDgpzap0hAtqjCWjCdVQ2cCkjJhDutAzOaV7DhvbkH6SYlwohm36b3DsGqqfZXXBobEtD0ujAD8M0IULC0vRCJqz3Mrjq2x6wJOhkj5R5Ht3vOGz88EaXNM4y1ckSBAtm5DnbLNQ/NWASm1Im5yTivfnirJeXq+sC5LY4992y+4+7UsycI=
+    properties :
+     x : 108
+     y : 121
+     width : 339
+     height : 22
+    type : 2
+    code_elements :
+     type_code : 3
+     p_codes :
+      -
+        type : 276
+        enabled : false
+      -
+        type : 277
+        enabled : false
+      -
+        type : 278
+        enabled : false
+  -
+    name : EDT_PORTNUM
+    identifier : 0x26d83d6b02a2cf4d
+    internal_properties : CAAAAAgAAADQKWY9w/IAoR7Sl4wumHpmisM0VlmqdXkbNZ+6IhjkQo96rgox+ik8xl365NBGhn+v9Feybx1LrXQBkHP/+W1efiQfXYw6wGOmbpG2jRgI9YUSAIKIE5qOIABqStFaoqfnRdPXhXevbXIiO4/WeJ1962v8CjaMhz4giBKt0hVRDBZZWndvtV96/iLSARMPQUoyLPEA/vCZdIP7Qsus1+WJUJe7phC+rcEVwhPG+jZKrRIhWsmGQ1w7QCnP+fkAkOAI1LA3ufgRvZ0j32QKk5g0d1MzTaEeWa8Pelx4S3H4hht2gATM0lsYD0ye+ceVrHaNtXvxBISFSVp3VZGHqJXjHeHljbVNYXsZmx+mNReHJ1dXsHpOYhUaaGamplewdxgFvWL4qvQbnIgqRwCaczWNJYweDfGtl41kAOtS+Ka5otTQb6HEton7QrL+Nx4fAXLSJbWh4nngdPpSh4D3atarFd4EBUiXsPv2QOLe2sxiffTh60GELyb9jEnuKZH/yR42v+M3rOiq3znIvDrEdHVcoICk4jAocBEBLZQKZW42fjd4Y4we8D8R3MctNhGMcvmrC8DQn63I886DhBbaCRmtaZT7zlWOrn53sLAzSB+epMhROTls2ttscp80+gQEXEzBG9Dz7MCYMrE3xKaAeMZ6XsH/vdGzMNBkFh2xhRL4L/q+TbqCZTD8qQZ55tPaKWUGQB0IZZ1NiloD3pr0LNKtSH0vg+fJAY2wycjixLT1ATHg7xA8OhOO4sdBdntEUzmgllI7a/OAJQjrlV9b8ovE/1OJo4NeMLP/d/Iwl1mEE2fAY54um6ECZpX/+FSncKO0MoW3iwSBRXb7zB1ppofmYOoRSdMojth01xJm/2hTDHNNWFmTNWTIqKoh2dpcpHEWQLJU/gSSRUEJOJ+L41wL1RJ5u1gYzJiihIZ9eN9uBZgavPdOW1q8QDuDQfCf3ZoSLXZDkVy+2hKF2DoRfTGhqVc8i+Hk/ShBgk2MEnu+gDHhcWh318yPLwe2GO1XtBLuiV3OaN3LIiUHe9K5RE0+CPmKEFY+xmG1hYvSydamjzrcsU89kqiPEi1Kyp+nigHc+xSZF2DZ4VIXQ1hEBsVEW2UwhcgBpMC1C6reO5qKRRtCI1mhUowI0V4h8tpvuOshejWyNY3s9gFrP2cq8/QsTRKS4Uy0fXbma8Z7eR1mmhWj7CH3mi1raEMiIyrIyUDsPCqZG6mFqKkIHv+VK0JJIt47dwbaZ5AgoRXEmtC70wgyvQkO8jLdcopBH+o49rPfYr7Fp/ymox7ZiBkMpkPYUh6/5tgX3DKt16nB9IBwBi6qTWDmlRPhnYdFgCIcvk+0LlyY9u5IUFzo/x3iCZTODJk/+aX0exVMm+BOad0n
+    properties :
+     x : 108
+     y : 149
+     width : 147
+     height : 22
+    type : 2
+    code_elements :
+     type_code : 3
+     p_codes :
+      -
+        type : 276
+        enabled : false
+      -
+        type : 277
+        enabled : false
+      -
+        type : 278
+        enabled : false
+  -
+    name : BTN_Connection
+    identifier : 0x26d83d6b02a3cf4d
+    internal_properties : CAAAAAgAAADz5Jqu/wOUzGZvMboYdFwVw2IWQqK9DH6DDZrH+9wdJd/h2OtNNu5LnB0EwIIFn25XVlbYC+IGWrYhwpRM+lueNrpvaO47QLkaFqA89OW5xn2WhomMuMwMbghHBx89pQBHwsMjusWQQISd6/VHDLeUvCfb2RvcMUaGR7Oeol3ak6ns6zrM0gnNrNtQ3iKu5zq76SOXgXnAn9QxrSy2G+C3zUEMl9dlu1ZikK5Z8fsTqz8da8w2v/fQekcoa9WBZPKI0WR56nvjIOX1lmowAIAaJJ9av3pKdzFyqvt1tqSQIk/2s720zK3wI8NHuKbD70u79+1lwFYlCQnmIMKuwwqb/IiFKlEqeeBVIe8qA1xkwXQoxmg9SvquxZfqJbAax+MSpXAsGl9WYY6B24obZwf0zuWyJQ5M+dPXxIx2uIwqNX11DD5C560ElPqwruBKW4/dG6a2cysqAU2+TjgmX8Am4K2PmHjpm0ZWiM30Gv7DKrJIctAdb7qCiZ1nCeY5QlfyGvVnS9OVUf89rYg72S0Z7H1r1Lqq7iV8fhorD+/yFJK4Qf87tKO/vJeW4dDYif1Lq7l17rp73VQC5qsBvj+TASGRRymDRr8TleiCHok7mxDW+GM/413q5cRAKOFn5WMoS9DeLASeVthS4KxZvR+ympj0uF7v9Zw10J7KGtqrAsfbV5WyY57TphJQz+WvOa6SeOqdTST92kzcXE6hJqurxuxxShm5JJXIWIxYlAqr41YFY/KINGzAdSLy6Y0dNKG1GLrQ8IAj3t2QH8n+/4avso+8tfVrMUg7wlxAwgyoKan3tAd/x46E7yn7Bpn7pp+vArUOjw+JOC0mdq5YE8unugobopZGoaNJm6fmd4G0OhOZSg3RTTvZTLh6b41PBPD9fGB4bQMvmSQfyNGkSSNGXx1NUxtR70YR+Q==
+    properties :
+     x : 339
+     y : 177
+     width : 80
+     height : 24
+    type : 4
+    code_elements :
+     type_code : 4
+     p_codes :
+      -
+        internal_properties : CAAAAAgAAACEutynWrQFIuEUMLMeNrV2XwIK2abmQLDBRqItBB79AUyKnZMOthXIcHE+VfNC9i9oHPekkaEea4qmm03x9IAXcje/3lmyAk6T+Klow+5I2s2TkD6UxBM=
+        code : |1-
+         IF EDT_IP_ADDRESS ~= "" THEN
+         	Error("Enter the name or the IP address of the computer to which the application must connect")
+         	ReturnToCapture(EDT_IP_ADDRESS)
+         END
+         
+         
+         
+         // Connect to the server that was started on the remote application
+         ClientConnectionServer(NAME_COMMUNICATION_MESSAGE,EDT_IP_ADDRESS,*,"_SocketMessageReceived")
+         
+         gbSocketConnection = True
+         
+         MyWindow..Plane = PLANE_COMMUNICATION
+        type : 18
+      -
+        type : 161
+        enabled : false
+  -
+    name : BTN_Home
+    identifier : 0x26d83d6b02a4cf4d
+    internal_properties : CAAAAAgAAAANYowDJ/dikofUasS62o/KZZB3SPRkelpZ+tU7f3o7c6bJFHMmcL3NVGVy+MIbRm51BFozOSnWfke3/L9c7TrFHOL21+VUXDYHISa1ey4OFUMzuPnLNjJge5H8592PI6177fBOfZE0Frn1YQjGI9dambFxzaFtNeFI8sHzy9wrp0tmfXLggYir9gGFUcbc2flGRFFfdDJ+y6vHJNgEynlc8dMj9mCr6zvEm24IbEz2Kk3SjyYiBySvehBliLpo61a7r2zkTW1Ni7DB63B21K+gNwKoLehdUPSQDurF7czZNDTNSwrhrY9fx6atW4hbwtM5ElAXOpLcO5lu1ElqAqZgDvUacTM4rTwi8LlbffispwuWhz9z88tapE4nqNoG+NRWfvdelxz1M+Ts4zYNaog5Jnkzpj2QSlZ6vcsZmNfEsJV+MlF0bXIV3daiS6cUoM33tnE61rymcltAgxDfaLFrO+zjIxB210QsStbnsN2CulsyYjc7ta1TpVmEGlUlwPd9ThhLC4lmBB5EgDqpKCw1CdErz9j3EKu+yPIiUSi7vn+ksIP+bnpNshzizh718SftQPRtvNS5KT44Dk1fOhMUkmnB2YRuZhKOYNuZHgs3/g3iIXpHHSqStjCpmYfB/y8vUC4CnhlDpK8NX1sYHdkyhdhOAGAJwzwerVUgjMzrb6wLPzpFQh4u/Z0o+TCpRL9xvmLY9e7A7iK2Qfrx/cwcpkOW73b8aUVzMhGBVxBXwKAzldpL/YWtHSSgm8Lcx2Ox5AYAfzCOEOsByvg0QMQ7aUuNuK033hAn23K7I1/J+2RUo7mUMaHZoqS4e6LjaLiWC88Bfo1PBUUHprX6bXK6lEmEDq/so6NwNvb4deQ7xB+qtYBzTKUwJrDh+HFNBbL0h1jTRrYMb7b4VMfbeM1oln7AmTdWChritLx/hsz9372m51GRZC6Phi4Y/4qPPZfmIu4=
+    properties :
+     x : 18
+     y : 275
+     width : 80
+     height : 24
+    type : 4
+    code_elements :
+     type_code : 4
+     p_codes :
+      -
+        internal_properties : CAAAAAgAAACEutynWrQFIuEUMLMeNrV2XwIK2abmQLDBRqItBB79AUyKnZMOthXIcHE+VfNC9i9oHPekkaEea4qmm03x9IAXcje/3lmyAk6T+Klow+5I2s2TkD6UxBM=
+        code : |1-
+         
+         Disconnection()
+         
+         // hide the Home button
+         BTN_Home..Visible = False
+         
+         // Goes back to the home plane
+         MyWindow..Plane = PLAN_HOME
+        type : 18
+      -
+        type : 161
+        enabled : false
+  -
+    name : LIST_MESSAGES
+    identifier : 0x26d83d6b02a5cf4d
+    internal_properties : CAAAAAgAAACj7fhJ0oXcwAI1L9rXEjerXh+jwxJwkXGq2r0+u0nHOahZN9fnWfQM4gZWa5p5Yj3PlE1070Ind8tl3pT5Y5uLz+gUeraHPGxR0e8e9u0Y3yLx8/0WzGYmTUj45Cagcu3OParEIcpksKn6yc2OSr52Zh3EEykA/7Jn5fQJGduHz192WJoTNetq21TFvy/OYTUicNfbQaa7RuMSBXdWrB8C/2uw6iD4JQHGTanaJCdHQeNcldpcWWD8z83WQXI02nNhP1cxhotrcE92gPXOFksIF1MMJNDP/ldt5GRHbPg00xAef3n8yEGra9bMCcjhAiBRHpWSfNNnXIV4aO2dvRXwQNJ6/Ha3nx/YFFzID7qcr1FXHCQ04oNVIInhx9lPNUm7D66mKI/ra3Bmh3eloSQZbyawQqIlVyPvkpPmKM000k99wWAu+WsaVNtZlZu7UPzisKC+KPvLvycc7BpFuvlGoaT2U9rMv9d0zKxsxjbWckaRETUXd+LaIKy692rTISwZpoQ5oWVt6incYdN711ZrONQueiGKpAn41KCLFH+5CP4AMteJaFiw8ORHLnZq3jK+mzQQkBOkY4OqL+Ly0bt9tXCEpOgl9g0fAFKZnVbUyT3Kzv8kvc9BjataW3l4Q9g86VcX0xlXfgDKWgbYckHkP/4JKOWQBBHeVBtLeY6nrU49IOz0LKJhklz+4Gj1Aa2QXz628UH9/LR8w/ldWyo/VXWN/BG9A79L2pCoe4CiOOS+Uf3xETupCd+rg9norq2iWCDiHI8bJCos07nvN1wzO56KK1kHfMUwSjF+N36WTKKsMIZVELFAXgQBijzLCRMWxUvBXZKy6s27wQNt7517KUiP5q32m7FWy93j8sSEpOIyuUfLPqO/8LPueJhN3C1rnRcJnvDQMOgzff6atk+f6uIehX9C2GS9jo5SPuUCm3rKn/9LeXesOir5gAjG8ySARIl3Q/8vAidouFAt883xlUcZZ4z2C+OKd9C+e/C+HTnfWIuwkD5wZO3Dxt3X19K2sg==
+    properties :
+     x : 6
+     y : 6
+     width : 531
+     height : 197
+    type : 7
+    code_elements :
+     type_code : 7
+     p_codes :
+      -
+        type : 35
+        enabled : false
+      -
+        type : 22
+        enabled : false
+      -
+        type : 24
+        enabled : false
+      -
+        type : 23
+        enabled : false
+      -
+        type : 25
+        enabled : false
+  -
+    name : EDT_MESSAGE
+    identifier : 0x26d83d6b02a6cf4d
+    internal_properties : CAAAAAgAAAAK2zlFYv5d9jJqCipcfYQDlFixgMFm6odJnSVM53vcKLTlmpei2faYi2OHTkWQNecczTj9T7KXF/dF3SSw8IFsusZCml1hyzKFeCy0qRRDZ4yV+5oUAOST6XJzL880jIMyOxRWJCad7oqSa4bEa1aLr5ZbOiK1h3fY8RhsIjEiaCDwOofIFWzj1NBooukb3u31U501WqOzm4yHx9hy9k+/ShqieZnZztk57ScHKmnfRYHX6nSdoGnW2DT5xIeX5W1UwOtPTW6yTuVOCvi7ECTD16sPxeskzT9Dm/D6zeoM6X2B2wrMQBHKT2Nglwm9qH+5Jb/A4WyDqWcQNh1Mxg+qmIVT+OY5CyC1QacMkBj1/Wluy5Fj3y7uM9gquM1IMGNg98MnRWZlieWflNo3Ua3L5JZJDtFK86fe9bMyUBEty1isFh6ZL6u3mrmdu1Qk40zz2CbbMtEZISmssMi7MDHP/286G1Ke52yZiHEsU9jov0q25cUiI61HayYh5FlH8dDwjmpvUH9unRtK1ry93/sB7iqjEGO5c+m0K8TFcw/5XEyvO8ECMyqaw4ygEDrqSH32ktq+f9KCew1Oavqh2jcpLsyN3IcMxGrd9OiKmV6iTV3DocnVe43FEu4lNIgsqJV+DkNBoOOjvKnZBnKfCGwDc23mocYvBJ455tiWQZ3tF68NWGaV0k8Wx8QI3sh/NGeTPpWDJlRPBikIhnDXJGjyBts5Q7Cvi0HKTLrYLn6JoO4sRiz+G5/7fK6UN0LKel0sp0PFlzJl5xoD2Y1kbIl0IRRltnqRxHVLxCtmJMUtDuN25WhvMF28UT/TGLONSPTclKWRTDRu/g/4acyIi81g+5LZiyfpxhRIaL5YKrVN8pF9j0mCbYXq+iQne9WM6XUfNihjoCWiMrq8HyAq/W6hZY9xHJrR745P3aniwLlBl5CltU3arkT3L4LDeuq+eLUsgSbUiHB0rptIgWyOd/mizi75ULwRrSfv34PHWl87EnEgko06WMdwInWQy+PwkgiGGif5pWzFlf9SxTC9IRAIZrQgfCx63PgZTF4RpxG+1hkJ1SrC9WDCMD/gAooD8FgpbMqUQ+mVoZvutuB/JRT+/u5qux046OArwn3UOA0+8rFRTW0qxcQOn8hph784iVFpoZerckGMetDpEpjC6MNF8YveYlsdykJyx3h63vkKZ2UaC6kKwijbcDd8Iy5f2WJkXztRsoa6mIZ6F8Xg43FJ/KQvocL6pmdaE7Snqu4gl3LLnMqoVZZfAzxVnLsG1KpooiTygRQ4kbO3Eb5Bss9J+K7Jhm5h5RhZA9SZpptaeKO1JppQXvgb11so5DsmQlY8TH7Vvl/B0KJ6XZXYHAsZDA==
+    properties :
+     x : 6
+     y : 209
+     width : 441
+     height : 22
+    type : 2
+    code_elements :
+     type_code : 3
+     p_codes :
+      -
+        type : 276
+        enabled : false
+      -
+        type : 277
+        enabled : false
+      -
+        type : 278
+        enabled : false
+  -
+    name : BTN_Send
+    identifier : 0x26d83d6b02a7cf4d
+    internal_properties : CAAAAAgAAABoEX4SejWlJWoZUEt8J/zAA0uhHfOe3pzmvBLYPR8YiJSwmpkSXLyNMtRtl/CVWjIdlsmE1BSBp1PXeep71VBKgnn62frOlARBIpk2CrZo5vQ4V70ma8XciIdq2fmR8RnzEnFuhEHr9ZzAWNL0fDzKHSE+WWE4C/DRVOCNYpFyTBpCASWev0WMfTPGCzfVpcBZQA1gzctR0++5+7ouFdDEgTBlGliGi9yvgLud9TqayTodevz+edP/hYp3+rTZibC1JhbuhmJxvWGR5DRmhi4RNOQik+XfPGHruWTr6mmVkOBrOw/VrdClwf0Y+3+shXYS3wODMohRM5tOe5AkG0aIpWTqMYsw6qtMosHF9oitIRb3CEDLSHYgz2kAyEM3HbHlEj5hYHlq1B3YTgmNxDzU6rL0stzvbZVtCA9VUz3A4s/D7j3o+S1XNR9btSwwMtK6NjqmSffEfSJ0SwuFsNWWwWk3K1I2vLaM2mVdkRhedaBcIaDuAn0CmEJCWCOirlJYHJVcXDuSszoa92p4uhb7U56NzbAf4klXBTR1xw68wYc7m8HRgtNl/oai986I4GpwkKvZJ5Ad/GeiIcFobEBjIstoy6y6ZwTeKG08mDVunc8u9Vu4ukllKof792Rj7Ac7o8nOUdOtiEBUT9v8qBVL63+UChYbkNk5lsxeFFYcuef/WAtnoEgvOkM1vPUtMHxOYCeb7MLBaJKSYLsoRjfbSN28nGVEqMWE1R5wx7QLfmL+OOouPqNYqKxZNyd1obm/qvDOtUY31YwA2pFJEuXzy3OkrL86r9gxoWiiVdkHsx23PoRa28vw01dchg3UXjbSEsbiUeaBdmmVZkGVOmBHuHFosnAxBQjba524sWWf
+    properties :
+     x : 457
+     y : 207
+     width : 80
+     height : 24
+    type : 4
+    code_elements :
+     type_code : 4
+     p_codes :
+      -
+        internal_properties : CAAAAAgAAACEutynWrQFIuEUMLMeNrV2XwIK2abmQLDBRqItBB79AUyKnZMOthXIcHE+VfNC9i9oHPekkaEea4qmm03x9IAXcje/3lmyAk6T+Klow+5I2s2TkD6UxBM=
+        code : |1-
+         SWITCH True
+         	CASE gbSocketConnection
+         		
+         		IF gbServerMode
+         			// We are connected in socket mode
+         			ClientSendMessageServer(NAME_COMMUNICATION_MESSAGE_SERVER,gsApplicationName + TAB + EDT_MESSAGE,True)
+         		ELSE
+         			// We are connected in socket mode
+         			ClientSendMessageServer(NAME_COMMUNICATION_MESSAGE,gsApplicationName + TAB + EDT_MESSAGE,True)	
+         		END
+         	CASE gbMessageConnection
+         		
+         		// We are connected in Message mode
+         		LocalSendMessage(NAME_COMMUNICATION_MESSAGE,gsApplicationName + TAB + EDT_MESSAGE)
+         		
+         		
+         	OTHER CASE
+         		dbgAssert(False,"No connection was found, we should not be positioned on this plane...")
+         END
+         
+         
+         ListAdd(LIST_MESSAGES,StringBuild("Message sent: %1",EDT_MESSAGE))
+         EDT_MESSAGE = ""
+        type : 18
+      -
+        type : 161
+        enabled : false
+  -
+    name : STC_Please_wait_Waiting_for_the
+    identifier : 0x26d83d6b02a8cf4d
+    internal_properties : CAAAAAgAAAClzMAwciAmgPkEiLaEPo5RIzhPn3M68/P1L3WL8Q4PkvlByeKLe6J16wXhg8hgiTzyTsPeBiarTu5YclkUz81EZyE+26mDf4mYf7UbihzmGG/8HKdjqr8o2GAgChgd0NCgVeDafddWaJiFndcpg+RZlsIPQ3WRrCVZoN9S5rjy4lhVdd+3BHbPmZkEi4h4zqOm5OlehCaHwHFcZGftxat7vSXy3xp71SQrtk9El0aGUQqXtwXUN6JKpvMWJp2bjOxDUE+rb0A7VPpKToQ2Q3IG/58b5/jzu51SMX+CouUCSmQ4bor4HaNnDePL0UZK1ohT09ScF88ZOwVpmAFkzlzaE7bIrHVdk0TOeoih0LmhUD/9BmKXGWDnuqbKM5u/Q1AshDx9C2Iqw2mh/GMusjN7w87S/FMiAxSVzL+gfvdgfc0zwfTtdCvQHGoJe6Yzw9QpXbIQXSIFPOm1Yah3s9M/qKG0TMIIeOKgwEMIt19Ad9uNKZ4dqqGSD+Tl8+Z5zyY2QJpm0sSEbmRARxKknlIfRxZ64o0IHnt8OJyffqjS
+    properties :
+     x : 179
+     y : 6
+     width : 211
+     height : 39
+    type : 3
+    code_elements :
+     type_code : 2
+     p_codes :
+      -
+        code : |1-
+         
+        type : 18
+  -
+    name : IMG_Image1
+    identifier : 0x26d83d6b02a9cf4d
+    internal_properties : CAAAAAgAAAAlLxevGJKYAngmmQ3XjTNRhcZRxNbuiYZOFOOyGEoFTsH8y1GurxjnNX8JGOP3+dMkDdfgf6Ep2iuon3S2YoV3ROGGTcsoLJrdV0F80U2H9pAQNwXuLY8UAhksi2J8uSG+3PcevAdBOrevp5RU5NYXZHQeIynRz6kE0UPDsZzCOkbjnri2fuXxfZhYcv1VxZaGcmx9ep/oemiYKV99gpJNWHLRnFpc+U/BRCu0ZZ1hpEFjtMTEj23xNghzRcmIpGYOFnJcfaL8ZBjyCTcCtadyM4he/Jz55vktRJfyRZyPKfImOUwZ9FRxbe1mEpMzJj1/UXvCsVQp0s54B2XFWCp5QJvUE6ckqENogDCyo3EH4r80aii0yQnLLEK4YMNDicQsxQ0J/7cyRd1sIvjKTr9qDWWr4Dm6KyWjNC0iauylLf8HNbOW8OGRIyrYAKQj+C7owgk7K0kI4pIEBtZfQiB0h4WKcLwkI3oYaXhW+uYL7I9+8fUdGaAj3JkSzWEOhvrLxRRaC9c0IRlBcOR0PRYHtNnr9Y+702TyqKXb55mr2KWDtUFPrC3mt62KbSPERjnxnI3Mna4KX5WCZlQEtD0frWlQYM+V9ULoU+4baTcg2qpOn6YEBffMWeg33RswW0S+bfnOUmf2476PLkkiDWav34gkKjvi2F302ZdzMJtRrbG0gViM66aKMmF5Q2s+P4RxxD6Nom5NyJQ/gBNlBCi/0X6IkvHvs4WgUg2X3N5g3A+XNsyHBqV+bUwscixH4AhLc973l7SS9Nxe7Z+PhYHGcQxs7/s0Lyrxj/3/PdYN6ObUG7ltYwN4G9Ai772M3SR6ZVA+leyPMaNukKxsSsHiGN1FzcNi7uFbiZcisCEBSmuMhoWS1ipe0suAoWsc48AH+G72lvuJpCv5dztY6DPsOEjBlmI=
+    properties :
+     x : 232
+     y : 51
+     width : 80
+     height : 80
+    type : 8
+    code_elements :
+     type_code : 8
+     p_codes : []
+  -
+    name : STC_It_is_possible_to
+    identifier : 0x26d83d6b02aacf4d
+    internal_properties : CAAAAAgAAAD61KwoxfbzCLiUMiyGag75+Bk9uYG5N4q9j7bK91+FBtdRzZ2kdZUk60pROxKoNfEuoTj0SnVcWBntIKi2Rd+np7FGLPv+dStcyYvTT+9gdUBpNsapbwMXAZNNbsrdF5+C3ltrtbbgl572tCv6d6V7cMynxGp9OK7P4hYo8tNUPC56l3pdQf+zbkeTJAm4aSFvS/NGUq+T4/0fhnSTaYD6eYubQBEiR2T+nGK/haCiycidLDjlCC5IC2G1/W0iIKvyjXrwepmTI5j6Rr5W5TSMq/xsErvAX3nBwTKzppoRncdgjmHMkoBtu5cUEfc0W5jx2e+S89iPBO0hcYuDtrZ+FNOUkNQNzLSsj0WYVkqXJp93Xs+1wAskE/wnKBtQ04RhbZl11x2P13oixp9LvMF2VVymK92J+HHwfsZv5tunqgdrc1C+Fkpf5e1fS7d43l6GIdngqJRdcZZnmPk/kWetsnncRcSlCUhR793DPduq8Dw3UBDPrW6I9SZSXecGJLvoxz0C9COGJzEsvpVJ/9iQpfwX45ljQtuZ//3k6mq+wakMzsSsuWBqs8Drr22spOu4VZxFIHzlZcbwZnLSZqKqgPi5evVPhtjGv/GUfDPzsNRbsu5Qp5zdQspl+p9Lk7UyffiWZvjKAlngYh3MF7PWGY2SsfC4j5rR7bytSghYAm1Gt1uWgkP7/coXqCzrrRyIqX94
+    properties :
+     x : 102
+     y : 145
+     width : 349
+     height : 112
+    type : 3
+    code_elements :
+     type_code : 2
+     p_codes :
+      -
+        code : |1-
+         
+        type : 18
+ menu :
+  name : _Menu
+  identifier : 0x24226a290dfa0be2
+  internal_properties : CAAAAAgAAACCv199ARoPUfG3WAPSG9eefhOOjWMQrs8CrX6cGGGJPoSHWBq4PXhStOWc1YnAZMZ5+EFR1WTDn8CTOTiyLnXPpAR5X8rsRkPZrm1yZeYDDt4kRzDPLbUf4Sh/mD3kd1D8V2drCFLmjeQhgpw7GKGwHRga+ZdjSqXGIC3LD1RracZ230hOmUJTj+ABDW4IHrw4PflmVGgp8E9KnAf/gselRrzEY90l3Cr9N00QijFYYrbrl4qF4kdim1YX6jYT4ezQhbJsU84ENZsxzq+o0JVHYQ8rxck600VhGV04/ao=
+  options : []
+ languages :
+  - en-GB
+ popup_menus : []
+ message_bar :
+  internal_properties : CAAAAAgAAADdxbVs07BkUS1UoOocTYH8Pnj2yquu2k7C51cx/w0/OiezR6gcm6dQgvUW42CwXcYTwJe37S+drjkqRHDh2Lu9ZrHmmAPgjkjFcDtK/drZnVEZbEazzAXcxLFTFU1o
+ actionbar : {}
+ code_elements :
+  type_code : 1
+  p_codes :
+   -
+     code : |1-
+      gbMessageConnection is boolean		//	Used to find out the connection to close (in this case, the connection by message)
+      gbSocketConnection is boolean		// 	Used to find out the connection to close (in this case, the connection by socket)
+      gbServerMode is boolean			//  Used to find out the type of the connection (server or client)
+      gsApplicationName is string 		//  Used to indicate the name of the application that sends the message (in the connection by socket)
+      MySelf..Plane = PLAN_HOME
+      // hide the Home button
+      BTN_Home..Visible = False
+   -
+     code : |1-
+      
+     type : 34
+   -
+     type : 180
+     enabled : false
+   -
+     type : 230
+     enabled : false
+   -
+     code : |1-
+      
+     type : 40
+   -
+     type : 11
+   -
+     type : 12
+   -
+     type : 17
+   -
+     type : 13
+  procedures :
+   -
+     name : Disconnection
+     procedure_id : 1646133193605500749
+     type_code : 14
+     code : |1+
+      // Summary: <specify the action of the procedure>
+      // Syntax:
+      // Disconnection ()
+      //
+      // Parameters:
+      //	None
+      // Return value:
+      // 	None
+      //
+      // Example:
+      // Indicate an example.
+      //
+      PROCEDURE Disconnection()
+      
+      
+      IF gbSocketConnection = True THEN
+      	
+      	// We are connected to a remote application
+      	ClientDisconnection(NAME_COMMUNICATION_MESSAGE)
+      	
+      	// Stopping the server
+      	ServerStop(NAME_COMMUNICATION_MESSAGE_SERVER)
+      	
+      	// We are not connected anymore
+      	gbSocketConnection = False
+      	
+      	
+      	
+      END
+      
+      IF gbMessageConnection = True THEN
+      	// we are connected to a local application
+      	LocalCancelMessage(NAME_COMMUNICATION_MESSAGE)
+      	
+      	// We are not connected anymore
+      	gbMessageConnection = False
+      	
+      END
+      
+      // Clears the list of outgoing messages
+      ListDeleteAll(LIST_MESSAGES)
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : FEN_Fenêtre1
+resources :
+ string_res :
+  identifier : 0x14226a2300aef482
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+ dialogs :
+  -
+    identifier : 0x1423c76a00f142a5
+    internal_properties : CAAAAAgAAAA4AKTup78vCpV26iD2zLoM1XaEAPUOKhKO38JBxztvqxUh
+    label :
+     fr-FR : "Vous souhaitez relier deux applications distantes.\r\nQuel rôle l'application en cours doit-elle effectuer ?"
+     en-GB : "You want to link two remote applications.\r\nWhich role will be performed by the current application?"
+    image : {}
+    cancel_button : 1
+    buttons :
+     -
+       label :
+        fr-FR : Serveur
+        en-GB : Server
+       image : {}
+       value : 1
+     -
+       label :
+        fr-FR : Client
+        en-GB : Client
+       image : {}
+       value : 2
+custom_note :
+ internal_properties : CAAAAAgAAAC68/W0/adbG0nFCRhrE42B5HRnbDzVHaz86sSQyxlBk7I=
+rad :
+ internal_properties : CAAAAAgAAABoAN7PLpwJW3EiA7WVZdCA5EwrCA1rvutcDHooMWKe
